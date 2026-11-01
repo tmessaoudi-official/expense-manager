@@ -31,7 +31,7 @@ Report published (private): https://claude.ai/artifact/Fbjg72qHCG87LW7pExhGe2
 | 4 | HTML report + artifact | M | done | 8541d98 | docs/report.html |
 | 5 | Signed commit + public remote | S | done | 8541d98 | - |
 | 6 | 6C certification + present | S | done | 5c222f6 | docs/report.html |
-| 7 | France-Tunisia multi-currency research + report section | M | doing | - | docs/research/07*, docs/report.html |
+| 7 | France-Tunisia multi-currency research + report section | M | done | 64c683c | docs/research/07*, docs/report.html |
 <!-- /progress-block -->
 ### Blocked
 ### Needs input
