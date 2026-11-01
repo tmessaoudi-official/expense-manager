@@ -18,16 +18,17 @@
 6. 6C certification (advisor), present the report, stop.
 
 ## Status
+Repo: https://github.com/tmessaoudi-official/expense-manager (public, signed commits verified by GitHub)
 Report published (private): https://claude.ai/artifact/Fbjg72qHCG87LW7pExhGe2
 
 <!-- progress-block v1 -->
 | # | Step | Size | State | Evidence | Files |
 |---|------|------|-------|----------|-------|
-| 1 | Repo + signing setup | S | done | - | .gitignore, README.md |
-| 2 | Research workflow | L | done | - | docs/research/** |
-| 3 | Plan file | S | done | - | docs/plans/** |
-| 4 | HTML report + artifact | M | done | - | docs/report.html |
-| 5 | Signed commit + public remote | S | todo | - | - |
+| 1 | Repo + signing setup | S | done | 8541d98 | .gitignore, README.md |
+| 2 | Research workflow | L | done | 8541d98 | docs/research/** |
+| 3 | Plan file | S | done | 8541d98 | docs/plans/** |
+| 4 | HTML report + artifact | M | done | 8541d98 | docs/report.html |
+| 5 | Signed commit + public remote | S | done | 8541d98 | - |
 | 6 | 6C certification + present | S | todo | - | - |
 <!-- /progress-block -->
 ### Blocked
