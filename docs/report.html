@@ -345,11 +345,11 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
       <li><strong>iOS:</strong> a Shortcuts "Transaction" automation feeding an App Intent (Apple Pay only).</li>
       <li>Cost <strong class="num">€0</strong> · no regulation · works offline.</li></ul></div>
     <div class="path"><h3>Path B: open banking (add-on)</h3><ul>
-      <li><strong>GoCardless Bank Account Data is closed to new sign-ups</strong> (since ~July 2025). Don't build on it. <span class="g v">Verified</span></li>
+      <li><strong>GoCardless Bank Account Data is closed to new sign-ups.</strong> Don't build on it. <span class="g v">Verified</span> · closure date ~July 2025 <span class="g i">Inferred</span></li>
       <li><strong>Personal:</strong> Enable Banking restricted mode on your own whitelisted accounts. Free, non-commercial, manual review. <span class="g v">Verified</span></li>
       <li><strong>Product:</strong> quotes from Enable Banking, Powens, Bridge (owned by competitor Bankin'), Salt Edge Partner. Run under <em>their</em> licence, not your own AISP licence.</li>
       <li>Entry cost estimated at <strong class="num">€200–600/mo</strong> + per connection <span class="g i">Inferred, low confidence</span>. Only real quotes settle it.</li>
-      <li>Under PSD2, consent lasts up to 180 days, so the app needs a re-consent reminder before it expires.</li></ul></div>
+      <li>Under PSD2 (since the 2023 change), consent lasts up to 180 days, but each bank sets its own maximum, so the app needs a re-consent reminder before <code>valid_until</code>. <span class="g v">Verified</span> EBA, Enable Banking API</li></ul></div>
   </div>
   <p class="col"><strong>Verdict:</strong> Path A is the product, and Path B is a premium convenience that pays for its own aggregator fees. When a bank feed arrives, it reconciles "pending" captures against "booked" transactions instead of replacing them. <span class="g i">Inferred</span></p>
 </section>
