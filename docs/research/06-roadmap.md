@@ -1,5 +1,7 @@
 # 06 — Feasibility, Effort Estimate & Roadmap (synthesis)
 
+> **Superseded in part (2026-11-01):** for multi-currency, France ⇄ Tunisia and the revised hours, `07-cross-border.md` wins where it conflicts with this file.
+
 > Research dimension 6: the synthesis of 01-market, 02-bank-sync, 03-tech-stack, 04-product and 05-compliance,
 > **with the 2026-11-01 fact-check corrections applied**. Where a correction conflicts with a research file,
 > the correction wins (see §0).

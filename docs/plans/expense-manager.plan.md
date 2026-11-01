@@ -8,6 +8,7 @@
 - [2026-11-01 22:25] AGREED: Remote: PUBLIC GitHub repo tmessaoudi-official/expense-manager so GitHub Actions CI stays free.
 - [2026-11-01 22:25] AGREED: Certification tier: advisor() only for this task's gates.
 - [2026-11-01 22:51] ASSUMED (review): Sync and household features placed in v2 (roadmap) rather than v1 (product research) because they are the largest cost and depend on the sync decision D3. Alternatives: v1 as in 04-product.md.
+- [2026-11-01 23:10] AGREED: Primary use is France + Tunisia (EUR and TND), possibly more countries/currencies later; multi-currency is core, not optional. Extend research and report with a France-Tunisia cross-border section.
 
 ## Formal Plan
 1. Standalone repo: `git init -b master`, local identity, signing with personal key `0C537690706EB7F5`, `.gitignore`, README.
@@ -30,6 +31,7 @@ Report published (private): https://claude.ai/artifact/Fbjg72qHCG87LW7pExhGe2
 | 4 | HTML report + artifact | M | done | 8541d98 | docs/report.html |
 | 5 | Signed commit + public remote | S | done | 8541d98 | - |
 | 6 | 6C certification + present | S | done | 5c222f6 | docs/report.html |
+| 7 | France-Tunisia multi-currency research + report section | M | doing | - | docs/research/07*, docs/report.html |
 <!-- /progress-block -->
 ### Blocked
 ### Needs input

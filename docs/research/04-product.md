@@ -1,5 +1,7 @@
 # 04 — Product & Feature Design
 
+> **Superseded in part (2026-11-01):** for multi-currency, France ⇄ Tunisia and the revised hours, `07-cross-border.md` wins where it conflicts with this file.
+
 > Research dimension: **product and feature design** for an expense manager + reminder + tracker.
 > Research date: 2026-11-01. Audience: personal use first, built so it can become a commercial product later.
 > Bank sync is out of scope here (see the bank-sync / open-banking dimension). Every feature below is

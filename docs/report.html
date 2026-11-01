@@ -144,7 +144,7 @@ td strong{font-weight:600}
 @media (max-width:560px){.row{grid-template-columns:6.5rem minmax(0,1fr) 4.2rem}}
 .row .lbl{font-family:var(--f-display);font-size:.88rem}
 .row .val{font-family:var(--f-mono);font-size:.8rem;text-align:right;font-variant-numeric:tabular-nums}
-.track{position:relative;height:22px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(11.111% - 1px),var(--rule) calc(11.111% - 1px),var(--rule) 11.111%)}
+.track{position:relative;height:22px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(14.2857% - 1px),var(--rule) calc(14.2857% - 1px),var(--rule) 14.2857%)}
 .range{position:absolute;top:7px;height:8px;border-radius:4px;background:var(--accent-soft);border:1px solid var(--accent)}
 .likely{position:absolute;top:2px;width:4px;height:18px;margin-left:-2px;border-radius:2px;background:var(--accent)}
 .axis{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 5.5rem;gap:var(--s3)}
@@ -192,7 +192,7 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
 
 <nav class="toc" aria-label="Sections"><div class="wrap">
   <a href="#verdict">Verdict</a><a href="#market">Market</a><a href="#product">Product</a><a href="#feasibility">Feasibility</a>
-  <a href="#bank">Bank sync</a><a href="#tech">Tech stack</a><a href="#effort">Effort</a><a href="#roadmap">Roadmap</a>
+  <a href="#bank">Bank sync</a><a href="#currencies">France ⇄ Tunisia</a><a href="#tech">Tech stack</a><a href="#effort">Effort</a><a href="#roadmap">Roadmap</a>
   <a href="#cost">Costs</a><a href="#compliance">Compliance</a><a href="#risks">Risks</a><a href="#decisions">Decisions</a><a href="#evidence">Evidence</a>
 </div></nav>
 
@@ -204,7 +204,7 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
     <h1>The money app that tells you <em>before</em>.</h1>
     <p class="pitch">Expense manager, reminder and tracker, built France-first and local-first.</p>
     <p class="lede col">Most apps record the money you've already spent. This one looks ahead: everything you owe goes on one timeline, the app warns you before a renewal or a price rise hits, and it shows a single safe-to-spend number. It works with no bank connection; bank sync is an optional extra.</p>
-    <p class="muted col">This report covers the market, the full feature design, feasibility area by area, bank sync, the tech stack, an effort estimate, a phased roadmap, costs, compliance, risks and the five decisions to make next. It is built from five research areas, each fact-checked against primary sources on the same day.</p>
+    <p class="muted col">This report covers the market, the full feature design, feasibility area by area, bank sync, the tech stack, an effort estimate, a phased roadmap, costs, compliance, risks and the five decisions to make next. It is built from eight research areas, including a France ⇄ Tunisia currency pass, each fact-checked against primary sources on the same day.</p>
   </div>
   <div class="phone" aria-label="Example home-screen widget">
     <div class="screen">
@@ -214,10 +214,10 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
         <div class="sts-sub">≈ 103 € / jour · 3 obligations à venir</div>
       </div>
       <div class="bar" aria-hidden="true"><i></i></div>
+      <div class="ob"><div class="d">TND</div><div>Poche dinar <span class="tag info">local</span></div><div class="amt">186,750 DT</div></div>
       <div class="ob"><div class="d">NOV<b>03</b></div><div>Forfait mobile</div><div class="amt">19,99 €</div></div>
       <div class="ob"><div class="d">NOV<b>04</b></div><div>Fin d'essai streaming <span class="tag due">résilier ?</span></div><div class="amt">13,49 €</div></div>
       <div class="ob"><div class="d">NOV<b>12</b></div><div>Assurance habitation <span class="tag info">+6 %</span></div><div class="amt">24,10 €</div></div>
-      <div class="ob"><div class="d">DÉC<b>01</b></div><div>Garantie lave-linge <span class="tag ok">reste 30 j</span></div><div class="amt">—</div></div>
       <div class="mock-note">Example data · widget mock-up</div>
     </div>
   </div>
@@ -228,8 +228,8 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
   <header><p class="eyebrow">01 · Bottom line</p><h2>Feasible. The risk is commercial, not technical.</h2></header>
   <div class="tiles">
     <div class="tile"><span class="k">Feasible</span><span class="l">No red area on the critical path. The one red, automatic capture on iOS, is a missing feature, not a blocker.</span></div>
-    <div class="tile"><span class="k num" data-ft="~4 mo" data-sp="~13 mo">~4 mo</span><span class="l">to a personal daily driver (MVP, likely estimate)</span></div>
-    <div class="tile"><span class="k num" data-ft="~11 mo" data-sp="~3.2 yr">~11 mo</span><span class="l">to a store launch with sync, household and bank sync</span></div>
+    <div class="tile"><span class="k num" data-ft="~4.5 mo" data-sp="~15 mo">~4.5 mo</span><span class="l">to a personal daily driver in EUR and TND (MVP, likely estimate)</span></div>
+    <div class="tile"><span class="k num" data-ft="~12 mo" data-sp="~3.6 yr">~12 mo</span><span class="l">to a store launch with sync, household and bank sync</span></div>
     <div class="tile"><span class="k num">€0–15</span><span class="l">per month to run during the personal phase</span></div>
   </div>
   <div style="display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center">
@@ -240,8 +240,8 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
     <span class="muted" style="font-size:.9rem">This switch updates every duration on the page.</span>
   </div>
   <div class="col stack">
-    <p><strong>Recommendation:</strong> build it in <strong>Flutter</strong>, already installed in your /stack, <strong>Android first</strong>, as a local-first app with an encrypted on-device database. Ship a personal daily driver with no bank sync: quick capture, file import, bills and reminders, safe-to-spend, and Android notification capture. Add sync, households and bank sync once you've used it every day for 30 days. <span class="g s">Speculative</span> <span class="muted">(a design judgment based on the verified facts below)</span></p>
-    <p><strong>Lean option:</strong> if you only have ~10 h/week, an Android-only cut (no widget, no multi-currency, notification capture plus CSV import, bills, reminders and basic safe-to-spend) is about <span class="num">360 h</span>: <span class="num" data-ft="≈10 weeks" data-sp="≈36 weeks">≈10 weeks</span>. <span class="g s">Speculative</span></p>
+    <p><strong>Recommendation:</strong> build it in <strong>Flutter</strong>, already installed in your /stack, <strong>Android first</strong>, as a local-first app with an encrypted on-device database. Ship a personal daily driver with no bank sync: quick capture, file import, bills and reminders, safe-to-spend, Android notification capture, and <strong>EUR and TND from day one</strong> (see <a href="#currencies">France ⇄ Tunisia</a>). Add sync, households and bank sync once you've used it every day for 30 days. <span class="g s">Speculative</span> <span class="muted">(a design judgment based on the verified facts below)</span></p>
+    <p><strong>Lean option:</strong> if you only have ~10 h/week, an Android-only cut (no widget, notification capture plus CSV import, bills, reminders, basic safe-to-spend, <strong>with</strong> multi-currency) is about <span class="num">475 h</span>: <span class="num" data-ft="≈14 weeks" data-sp="≈48 weeks">≈14 weeks</span>. The first estimate of 360 h dropped multi-currency, which doesn't work for a life split between EUR and TND. Keeping exchange rates manual at first saves about 17 h. <span class="g s">Speculative</span></p>
   </div>
   <div class="legend" aria-label="Evidence grade legend">
     <span><span class="g v">Verified</span> source opened during this research</span>
@@ -294,13 +294,13 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
 
   <h3>The full feature map: 49 features, MoSCoW-ranked, assigned to releases</h3>
   <div class="lanes">
-    <div class="lane"><h3>MVP</h3><span class="when" data-ft="≈ weeks 4–16" data-sp="≈ weeks 13–56">≈ weeks 4–16</span><ul>
-      <li>Accounts, transfers, opening balances</li><li>1-tap quick add, offline</li><li>Categories, tags, splits</li><li>CSV/OFX import + duplicate guard</li><li>Rules engine ("make a rule from this correction")</li><li>Category-limit budgets</li><li>Bills and subscriptions + local reminders</li><li>Free-trial-ending alerts</li><li>Basic safe-to-spend + Android widget</li><li>Receipt photos (no OCR yet)</li><li>Multi-currency, manual rates</li><li>App lock, encryption, full export</li><li>FR + EN</li><li>Android notification capture</li></ul></div>
-    <div class="lane"><h3>v1 · smart</h3><span class="when" data-ft="≈ weeks 16–31" data-sp="≈ weeks 56–108">≈ weeks 16–31</span><ul>
-      <li>Recurring detection → proposed bills</li><li>Price-rise detection</li><li>30/60/90-day forecast + low point</li><li>Envelope / zero-based mode</li><li>Goals and sinking funds</li><li>On-device receipt OCR</li><li>Warranty vault with legal clocks</li><li>Frais réels + kilometre log</li><li>Natural-language entry via LLM proxy (opt-in)</li><li>Cancellation helper cards</li><li>Insights + anomaly rules</li><li>iOS parity, lock-screen widgets</li><li>Accessibility AA, Arabic + RTL</li></ul></div>
-    <div class="lane"><h3>v2 · together</h3><span class="when" data-ft="≈ weeks 31–43" data-sp="≈ weeks 108–150">≈ weeks 31–43</span><ul>
+    <div class="lane"><h3>MVP</h3><span class="when" data-ft="≈ weeks 4–19" data-sp="≈ weeks 14–65">≈ weeks 4–19</span><ul>
+      <li>Accounts, transfers, opening balances</li><li>1-tap quick add, offline</li><li>Categories, tags, splits</li><li>CSV/OFX import + duplicate guard</li><li>Rules engine ("make a rule from this correction")</li><li>Category-limit budgets</li><li>Bills and subscriptions + local reminders</li><li>Free-trial-ending alerts</li><li>Basic safe-to-spend + Android widget</li><li>Receipt photos (no OCR yet)</li><li>Multi-currency: EUR + TND (3 decimals), BCT/ECB rates on the device, manual override</li><li>Conversions with their real cost; cash accounts</li><li>Safe-to-spend per currency pocket</li><li>App lock, encryption, full export</li><li>FR + EN</li><li>Android notification and SMS capture (FR + TN banks)</li></ul></div>
+    <div class="lane"><h3>v1 · smart</h3><span class="when" data-ft="≈ weeks 19–36" data-sp="≈ weeks 65–124">≈ weeks 19–36</span><ul>
+      <li>Recurring detection → proposed bills</li><li>Price-rise detection</li><li>30/60/90-day forecast + low point</li><li>Envelope / zero-based mode</li><li>Goals and sinking funds</li><li>On-device receipt OCR</li><li>Warranty vault with legal clocks</li><li>Frais réels + kilometre log</li><li>Natural-language entry via LLM proxy (opt-in)</li><li>Cancellation helper cards</li><li>Insights + anomaly rules</li><li>Tunisian PDF statement import, receipts with 3-decimal amounts</li><li>Reporting-currency switch, FX-cost insights</li><li>iOS parity, lock-screen widgets</li><li>Accessibility AA, Arabic + RTL</li></ul></div>
+    <div class="lane"><h3>v2 · together</h3><span class="when" data-ft="≈ weeks 36–48" data-sp="≈ weeks 124–166">≈ weeks 36–48</span><ul>
       <li>Multi-device sync (EU host)</li><li>Households: shared budgets, private spaces, settle-up</li><li>Web companion</li><li>Bank sync (Enable Banking, your own accounts)</li><li>Reconciliation: captured vs booked</li><li>What-if sandbox</li><li>Voice capture, receipt line items</li><li>Notes de frais, e-receipt inbox</li><li>Watch complications, travel mode</li></ul></div>
-    <div class="lane"><h3>Launch</h3><span class="when" data-ft="≈ weeks 43–48 + waits" data-sp="≈ weeks 150–168 + waits">≈ weeks 43–48 + waits</span><ul>
+    <div class="lane"><h3>Launch</h3><span class="when" data-ft="≈ weeks 48–53 + waits" data-sp="≈ weeks 166–185 + waits">≈ weeks 48–53 + waits</span><ul>
       <li>Company + D-U-N-S, organization store accounts</li><li>Paywall (RevenueCat)</li><li>Privacy policy, DPIA, processor agreements</li><li>Store listings, Data safety, financial declarations</li><li>FR-first production release</li><li>Commercial aggregator contract (premium tier)</li></ul>
       <p class="muted" style="font-size:.85rem"><strong>Won't build:</strong> investment tracking, a bill-negotiation service, credit scoring. Each would dilute focus or carry heavy regulation.</p></div>
   </div>
@@ -320,6 +320,7 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
       <tr><td><strong>Android auto-capture</strong> (notification listener)</td><td><span class="st green">Green</span> personal · <span class="st amber">Amber</span> Play</td><td>Technically standard. No Play policy text was found that allows or forbids it. Android 15 hides one-time-password notifications. Never request SMS permissions.</td><td><span class="g u">Unverified</span> Play stance</td></tr>
       <tr><td><strong>iOS auto-capture</strong></td><td><span class="st red">Red</span></td><td>iOS apps can't read other apps' notifications, and FinanceKit is US/UK only. The only path is the Shortcuts "Transaction" automation, which covers Apple Pay taps only.</td><td><span class="g v">Verified</span></td></tr>
       <tr><td><strong>AI layer</strong></td><td><span class="st green">Green</span> cost · <span class="st amber">Amber</span> privacy</td><td>Claude Haiku 5.5 costs about $0.000065 per categorisation. Anthropic's first-party API has no EU-pinned inference, so cloud calls count as third-country transfers. Use on-device rules first and make the cloud call opt-in.</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>France ⇄ Tunisia, multi-currency</strong></td><td><span class="st green">Green</span> model · <span class="st amber">Amber</span> TN capture</td><td>Storing TND in millimes is straightforward once decimal places come from a currency table. Rates: BCT via Frankfurter, on the device only (personal-use terms). Tunisia has no open banking, so capture means manual entry, notifications/SMS and PDF statements.</td><td><span class="g v">Verified</span> ISO, BCT terms</td></tr>
       <tr><td><strong>Bank sync for personal use</strong></td><td><span class="st green">Green</span></td><td>Enable Banking's restricted mode covers your own linked accounts for non-commercial use; expect a manual app review.</td><td><span class="g v">Verified</span></td></tr>
       <tr><td><strong>Bank sync as a product</strong></td><td><span class="st amber">Amber</span></td><td>The blocker is commercial: you need a company and KYB, the majors only give prices on request, and GoCardless-style closures happen.</td><td><span class="g i">Inferred</span></td></tr>
       <tr><td><strong>Multi-device sync + households</strong></td><td><span class="st amber">Amber</span></td><td>The largest engineering cost. Drift + PowerSync + SQLite3MC are each documented in pairs, but no source confirms all three together. A Phase 0 spike decides it.</td><td><span class="g i">Inferred</span></td></tr>
@@ -342,7 +343,8 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
       <li><strong>CSV / OFX / QIF import</strong> with saved per-bank profiles and a duplicate guard. Works for every French bank.</li>
       <li><strong>Android notification listener</strong> reads your banking app's payment alerts as they arrive, on the device only, opt-in.</li>
       <li><strong>Receipt OCR</strong> (ML Kit), the share sheet, natural-language entry.</li>
-      <li><strong>iOS:</strong> a Shortcuts "Transaction" automation feeding an App Intent (Apple Pay only).</li>
+      <li><strong>iOS:</strong> a Shortcuts "Transaction" automation feeding an App Intent (Apple Pay only, and Apple Pay doesn't exist in Tunisia).</li>
+      <li><strong>Tunisia:</strong> this path is the <em>only</em> path, since there is no open banking. Add PDF statements and cash accounts (see <a href="#currencies">France ⇄ Tunisia</a>).</li>
       <li>Cost <strong class="num">€0</strong> · no regulation · works offline.</li></ul></div>
     <div class="path"><h3>Path B: open banking (add-on)</h3><ul>
       <li><strong>GoCardless Bank Account Data is closed to new sign-ups.</strong> Don't build on it. <span class="g v">Verified</span> · closure date ~July 2025 <span class="g i">Inferred</span></li>
@@ -354,9 +356,60 @@ ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
   <p class="col"><strong>Verdict:</strong> Path A is the product, and Path B is a premium convenience that pays for its own aggregator fees. When a bank feed arrives, it reconciles "pending" captures against "booked" transactions instead of replacing them. <span class="g i">Inferred</span></p>
 </section>
 
+<!-- CURRENCIES -->
+<section id="currencies">
+  <header><p class="eyebrow">06 · Currencies</p><h2>France ⇄ Tunisia, and every currency after that</h2>
+  <p class="col">Your real use is a life split between EUR and TND, possibly more countries later. That makes multi-currency part of the core, not an option, and it changes five parts of the design. A second research pass (3 researchers, 45 adversarial checks on 1 Nov 2026) covered it; the full detail is in <code>docs/research/07-cross-border.md</code>.</p></header>
+
+  <div class="plate"><table>
+    <thead><tr><th>Fact</th><th>What it means for the app</th><th>Grade</th></tr></thead>
+    <tbody>
+      <tr><td><strong>TND has 3 decimals</strong> (millimes, ISO 4217 code 788). 7 currencies use 3 decimals (BHD IQD JOD KWD LYD OMR TND), 17 use 0, and 2 use 4</td><td>Decimal places become <em>data</em>: a <code>Currency</code> table generated from the ISO list. Hard-coding <code>/100</code> would silently make every TND amount 10× wrong</td><td><span class="g v">Verified</span> SIX ISO list, 17 Sep 2026</td></tr>
+      <tr><td><strong>Flutter's <code>intl</code> has no fr_TN / ar_TN locale</strong>, prints TND as "din", and disagrees with ISO on decimal places for IQD, HUF, IDR, COP and PKR</td><td>Storage uses the ISO decimal count; display uses CLDR 49, with a per-locale table for symbols (fr-TN <code>DT</code>, ar-TN <code>د.ت.‏</code>) and separators</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>"14,500" is ambiguous</strong>: 14.5 TND in Tunisian notation, fourteen thousand five hundred elsewhere</td><td>Parsing resolves the currency first, then the separators, and shows its reading back to you when unsure (OCR, notifications, quick add)</td><td><span class="g i">Inferred</span></td></tr>
+      <tr><td><strong>The ECB publishes no TND rate</strong> (29 currencies)</td><td>EUR↔TND rates come from the <strong>Tunisian Central Bank (BCT)</strong>, through Frankfurter v2 pinned to the BCT</td><td><span class="g v">Verified</span> ECB XML, 30 Oct 2026</td></tr>
+      <tr><td><strong>BCT terms: downloads "for exclusively personal purposes"</strong>. Re-serving the rates or building commercial products on them needs the BCT's prior agreement</td><td>Rates are fetched <em>on the device</em> and never re-served from the v2 server until the BCT agrees. The source and date are shown on every rate</td><td><span class="g v">Verified</span> BCT terms PDF</td></tr>
+      <tr><td><strong>The rate you actually get is not the reference rate.</strong> On 29/10/2026 the BCT interbank EUR rate was 3.3565 and its banknote rate 3.329 (−0.82%). French cards outside the euro area average 2.5% + €0.30 per payment</td><td>Every conversion stores the rate actually applied, the fees as their own line, and the gap to a named reference rate, so the real cost is visible</td><td><span class="g v">Verified</span> BCT, lafinancepourtous</td></tr>
+      <tr><td><strong>Tunisia has no open banking</strong>, and no Tunisian bank CSV/OFX export was found</td><td>Tunisian capture = manual entry and cash accounts, Android notification/SMS parsing, PDF statements as ground truth, OCR (Latin script only: ML Kit has no Arabic)</td><td><span class="g v">Verified</span> (secondary) · export <span class="g u">Unverified</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="paths">
+    <div class="path"><h3>Budgeting across two currencies</h3><ul>
+      <li><strong>Budgets live in their own currency.</strong> A combined view converts at a <em>planning rate</em> you choose, so a TND budget doesn't "overspend" every time the rate moves.</li>
+      <li><strong>Safe-to-spend is calculated per currency pocket.</strong> A TND shortfall can't hide behind a healthy EUR balance. The widget shows the pocket for the country you're in, which you choose; there's no location tracking.</li>
+      <li><strong>Non-convertible dinars count only in the TND pocket</strong> ("TND, local only"), never in a EUR total or goal.</li>
+      <li><strong>Price-rise alerts compare in the subscription's own currency</strong>, so a rate move never triggers a false "price increased".</li>
+      <li><strong>Country rule packs:</strong> French tax and legal features (frais réels, warranty clocks, résiliation) apply only to French-scoped spending. The Tunisia pack starts empty on purpose: no invented rules.</li>
+    </ul><p class="muted" style="font-size:.88rem">Design <span class="g s">Speculative</span>, based on 07a/07c</p></div>
+    <div class="path"><h3>Optimising a two-currency life</h3><ul>
+      <li><strong>The real cost of every conversion and foreign card payment</strong>, as an amount and a %, plus an "FX &amp; fees" budget category ("FX cost this year: …").</li>
+      <li><strong>Your own conversion methods compared</strong> by median effective cost, using labels you type yourself; the app ships no preset providers.</li>
+      <li><strong>Foreign-currency subscriptions</strong> listed with the FX cost they add up to over a year.</li>
+      <li><strong>Stay summaries</strong>: spending per country in both currencies, cost per day, FX share.</li>
+      <li><strong>Reconciliation nudges</strong>: "3 TND payments are still estimates; import your statement to finalise them."</li>
+    </ul><p class="muted" style="font-size:.88rem">All of this shows <em>your own</em> data back to you. The app never recommends where or how to exchange money, and never predicts rates. <span class="g s">Speculative</span></p></div>
+  </div>
+
+  <h3>Data-model changes (one-way doors, so they belong in Phase 0)</h3>
+  <div class="plate"><table>
+    <thead><tr><th>Change</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><code>Currency</code>(code, iso_exponent, display_digits, cash_rounding, symbol, placement) + <code>CurrencyFormatOverride</code>(locale, currency)</td><td>Decimal places and formatting come from data generated from the ISO list and CLDR 49, never from code</td></tr>
+      <tr><td><code>charge_currency</code> on <code>RecurringSeries</code> and <code>Occurrence</code></td><td>FX-neutral price-rise detection, plus a separate "FX effect" %</td></tr>
+      <tr><td><code>Conversion</code>: a two-leg transfer with the rate applied, fee, reference rate and FX cost; estimated → realised</td><td>Turns "how much did changing money cost me" into a simple query</td></tr>
+      <tr><td><code>FxRate</code>(provider, rate_kind, unit, published_date, carried_forward)</td><td>BCT quotes per 1/10/100/1000 units, and some days have no rate</td></tr>
+      <tr><td><code>Account.jurisdiction</code>, <code>convertibility</code>, and a per-transaction jurisdiction override</td><td>A French card used in Tunisia; dinars that stay local; rule packs per country</td></tr>
+      <tr><td><code>ReferenceNote</code>: dated regulatory figures with source text, grade and "check before relying on it"</td><td>Exchange-control figures change by circular; the app shows them, never enforces them</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout col"><strong>Exchange-control and customs figures: check before relying on any of them.</strong> The research found the following. Dinar banknotes may not be imported or exported. The resident travel allowance is 6,000 DT/year. A non-resident Tunisian is someone abroad for more than 2 years with their centre of activity abroad. Non-residents face documentary thresholds at ≥ 5,000 DT for re-export and reconversion. These come from BCT pages and circulars, several undated or last amended 2007–2016. The Tunisian customs declaration threshold (20,000 DT reported in 2026 press) is <span class="g u">Unverified</span> because the customs site was unreachable. France and the EU require declaring cash of <strong>≥ €10,000</strong>, including within the EU <span class="g v">Verified</span> douane.gouv.fr, 4 May 2026. The app stores these only as dated notes, never as rules or advice.</div>
+</section>
+
 <!-- TECH -->
 <section id="tech">
-  <header><p class="eyebrow">06 · Technology</p><h2>Flutter, local-first, Android first</h2>
+  <header><p class="eyebrow">07 · Technology</p><h2>Flutter, local-first, Android first</h2>
   <p class="col">The frameworks are scored for <em>this</em> app and <em>you</em>: a solo expert who already has Flutter, Node, PHP and the Android SDK in /stack. Versions were checked on 1 Nov 2026.</p></header>
   <div class="plate"><table>
     <thead><tr><th>Criterion</th><th>Flutter 3.47</th><th>React Native 0.88 + Expo 58</th><th>Kotlin/Compose MP</th><th>Native ×2</th><th>PWA</th></tr></thead>
@@ -400,7 +453,8 @@ flowchart LR
     <tbody>
       <tr><td>UI + state</td><td>Flutter 3.47 (pinned with FVM) + Riverpod 3</td><td>One language, toolchain already in /stack, strongest offline data story</td><td><span class="g v">Verified</span> versions</td></tr>
       <tr><td>Local DB</td><td>Drift on SQLite + SQLite3MultipleCiphers</td><td>Reactive SQL queries, migration tests, encryption at rest</td><td><span class="g v">Verified</span></td></tr>
-      <tr><td>Money type</td><td>Integer minor units + ISO 4217 currency</td><td>Never floats; rounding and FX are tested from day 1</td><td><span class="g s">Speculative</span></td></tr>
+      <tr><td>Money type</td><td>Integer minor units + ISO 4217 currency, decimal places from a generated <code>Currency</code> table</td><td>Never floats, never <code>/100</code>; TND = 3 decimals, JPY = 0. Round once, half-even; tests convert across 0/2/3/4 decimals</td><td><span class="g v">Verified</span> ISO list · design <span class="g s">Speculative</span></td></tr>
+      <tr><td>Exchange rates</td><td>Frankfurter v2: BCT for TND, ECB for EU/majors; local cache; manual override</td><td>Free and keyless. BCT terms are personal-use only, so rates are fetched on the device, never re-served from a server</td><td><span class="g v">Verified</span></td></tr>
       <tr><td>Reminders</td><td>flutter_local_notifications, rescheduled from the DB on boot, sync and edit</td><td>Phone makers' battery savers are the main risk (R7)</td><td><span class="g v">Verified</span> pkg</td></tr>
       <tr><td>Sync (v2)</td><td>PowerSync → Postgres on an EU host (self-hosted)</td><td>The server is the arbiter (households need validation); field-level encryption; full E2EE is a +80 h option</td><td><span class="g v">Verified</span> pairs · triple <span class="g i">Inferred</span></td></tr>
       <tr><td>AI</td><td>On-device rules → opt-in proxy → Claude Haiku 5.5 ($0.10 / $0.50 per MTok)</td><td>≈ $0.05 per active user/month at most; sends no IBAN, name or image</td><td><span class="g v">Verified</span> pricing</td></tr>
@@ -412,11 +466,11 @@ flowchart LR
 
 <!-- EFFORT -->
 <section id="effort">
-  <header><p class="eyebrow">07 · Effort</p><h2>≈ 1,680 focused hours, likely</h2>
-  <p class="col">The estimate is built bottom-up from the work items, for a solo expert developer new to Flutter/Dart. Bars show the optimistic-to-pessimistic range; the dark tick marks the likely figure. <span class="g s">Speculative</span>: log your hours and recalibrate after the MVP.</p></header>
+  <header><p class="eyebrow">08 · Effort</p><h2>≈ 1,850 focused hours, likely</h2>
+  <p class="col">The estimate is built bottom-up from the work items, for a solo expert developer new to Flutter/Dart. It includes the France ⇄ Tunisia work: +14 h in Phase 0, +82 h in the MVP, +72 h in v1 (first estimate: 1,680 h). Bars show the optimistic-to-pessimistic range; the dark tick marks the likely figure. <span class="g s">Speculative</span>: log your hours and recalibrate after the MVP.</p></header>
   <div class="chart">
     <div class="rows" id="effort-rows"></div>
-    <div class="axis"><span></span><div class="ticks"><span>0 h</span><span>300</span><span>600</span><span>900 h</span></div><span></span></div>
+    <div class="axis"><span></span><div class="ticks"><span>0 h</span><span>350</span><span>700</span><span>1,050 h</span></div><span></span></div>
   </div>
   <div class="plate"><table>
     <thead><tr><th>Phase</th><th class="n">Hours O / L / P</th><th class="n">Weeks O / L / P</th></tr></thead>
@@ -430,22 +484,22 @@ flowchart LR
 
 <!-- ROADMAP -->
 <section id="roadmap">
-  <header><p class="eyebrow">08 · Roadmap</p><h2>Five phases, each with an exit test</h2>
+  <header><p class="eyebrow">09 · Roadmap</p><h2>Five phases, each with an exit test</h2>
   <p class="col">Durations are the likely estimates at the selected pace. Amber bars are calendar waits that run alongside development.</p></header>
   <div class="chart">
     <div class="gantt" id="gantt"></div>
     <div class="gscale"><span></span><div class="ticks" id="gscale"></div></div>
   </div>
   <div class="phases">
-    <div class="phase"><div class="meta"><h3>Phase 0 · Foundations</h3><span class="h" data-ft="130 h · ~4 wk" data-sp="130 h · ~13 wk">130 h · ~4 wk</span></div>
-      <dl><dt>Milestones</dt><dd>Repo + CI green on Android · <strong>stack spike verdict</strong> (Drift + SQLite3MC + PowerSync on Android and iOS via a cloud Mac) · schema v1 with migration tests · app shell in FR/EN</dd>
+    <div class="phase"><div class="meta"><h3>Phase 0 · Foundations</h3><span class="h" data-ft="144 h · ~4 wk" data-sp="144 h · ~14 wk">144 h · ~4 wk</span></div>
+      <dl><dt>Milestones</dt><dd>Repo + CI green on Android · <strong>stack spike verdict</strong> (Drift + SQLite3MC + PowerSync on Android and iOS via a cloud Mac) · schema v1 with migration tests, <strong>including the Currency table and jurisdiction columns</strong> · app shell in FR/EN</dd>
       <dt>Exit test</dt><dd>An encrypted DB that PowerSync can sync and Drift can query on both OSes, or a documented fallback (e.g. Expo). The money-type test suite passes. A mutation test proves the migration tests notice a schema change.</dd>
       <dt>Risks</dt><dd>Interop failure (R3), Flutter learning curve (R2), no Mac (R9)</dd></dl></div>
-    <div class="phase"><div class="meta"><h3>MVP · Daily driver</h3><span class="h" data-ft="427 h · ~12 wk" data-sp="427 h · ~43 wk">427 h · ~12 wk</span></div>
-      <dl><dt>Milestones</dt><dd>Ledger + quick add · import of your own bank's exports · reminders that fire with the app killed · safe-to-spend on the widget · notification capture from your own banking app</dd>
-      <dt>Exit test</dt><dd><strong>30 consecutive days of real use</strong>: every expense captured within 24 h, no missed reminder (checked against a log), backup restores on a clean device, no open data-loss bug.</dd>
+    <div class="phase"><div class="meta"><h3>MVP · Daily driver</h3><span class="h" data-ft="509 h · ~15 wk" data-sp="509 h · ~51 wk">509 h · ~15 wk</span></div>
+      <dl><dt>Milestones</dt><dd>Ledger + quick add · import of your own bank's exports · reminders that fire with the app killed · safe-to-spend on the widget · notification capture from your own banking apps · <strong>EUR + TND accounts, conversions with real cost, BCT/ECB rates</strong></dd>
+      <dt>Exit test</dt><dd><strong>30 consecutive days of real use, including time in both countries</strong>: every expense captured within 24 h, no missed reminder (checked against a log), backup restores on a clean device, no open data-loss bug, and the round-trip tests across 0/2/3-decimal currencies pass.</dd>
       <dt>Risks</dt><dd>Scope creep (R1), battery savers delaying reminders (R7), bank notification formats changing</dd></dl></div>
-    <div class="phase"><div class="meta"><h3>v1 · Smart</h3><span class="h" data-ft="518 h · ~15 wk" data-sp="518 h · ~52 wk">518 h · ~15 wk</span></div>
+    <div class="phase"><div class="meta"><h3>v1 · Smart</h3><span class="h" data-ft="590 h · ~17 wk" data-sp="590 h · ~59 wk">590 h · ~17 wk</span></div>
       <dl><dt>Milestones</dt><dd>Forecast + low point · <strong>obligation radar</strong> · OCR → vault · frais-réels comparator from service-public parameters · iOS TestFlight · Play closed test started (it doubles as user research)</dd>
       <dt>Exit test</dt><dd>12+ testers active for 14 days with ≥ 99% crash-free sessions · ≥ 90% categorisation accuracy on your own data · an audit test proving the LLM proxy sends no IBAN, name or image · accessibility AA checklist passed.</dd>
       <dt>Risks</dt><dd>French receipt parsing, LLM third-country transfer (R8), Apple beta review (R5), Play listener policy (R4)</dd></dl></div>
@@ -462,7 +516,7 @@ flowchart LR
 
 <!-- COST -->
 <section id="cost">
-  <header><p class="eyebrow">09 · Running costs</p><h2>Close to zero until you charge</h2></header>
+  <header><p class="eyebrow">10 · Running costs</p><h2>Close to zero until you charge</h2></header>
   <div class="plate"><table>
     <thead><tr><th>Item</th><th>Personal phase</th><th>1k-user product</th><th>Grade</th></tr></thead>
     <tbody>
@@ -472,6 +526,7 @@ flowchart LR
       <tr><td>Hosting</td><td class="mono">€0 → €6.49/mo proxy box</td><td class="mono">≈ €40/mo (2× Hetzner CPX22) or ≈ $74/mo managed (Supabase Pro + PowerSync Pro)</td><td><span class="g v">Verified</span>*</td></tr>
       <tr><td>Bank aggregator</td><td class="mono">€0 (Enable Banking restricted)</td><td class="mono">€200–600/mo + per connection</td><td><span class="g i">Inferred, low confidence</span></td></tr>
       <tr><td>LLM (Haiku 5.5 + one monthly Sonnet 5.5 insight)</td><td class="mono">≈ $0.02/mo</td><td class="mono">≈ $50/mo at most</td><td><span class="g v">Verified</span> pricing · usage <span class="g i">Inferred</span></td></tr>
+      <tr><td>Exchange rates (Frankfurter: BCT + ECB)</td><td class="mono">€0, keyless, fetched on the device</td><td class="mono">€0 for ECB; BCT only with BCT agreement if re-served</td><td><span class="g v">Verified</span> terms</td></tr>
       <tr><td>RevenueCat</td><td>—</td><td class="mono">free to $2.5k MTR, then 1%</td><td><span class="g v">Verified</span></td></tr>
       <tr><td>iOS CI (Codemagic)</td><td class="mono">500 free M2 min/mo</td><td class="mono">≈ $10–30/mo</td><td><span class="g v">Verified</span> rate</td></tr>
       <tr><td>Domain, crash reporting, analytics</td><td class="mono">≈ €10–20/yr; self-hosted €0</td><td class="mono">same + transactional e-mail</td><td><span class="g u">Unverified</span></td></tr>
@@ -483,7 +538,7 @@ flowchart LR
 
 <!-- COMPLIANCE -->
 <section id="compliance">
-  <header><p class="eyebrow">10 · Compliance &amp; stores</p><h2>Start as a private tracker, become a company before you charge</h2></header>
+  <header><p class="eyebrow">11 · Compliance &amp; stores</p><h2>Start as a private tracker, become a company before you charge</h2></header>
   <div class="paths">
     <div class="path"><h3>Stores</h3><ul>
       <li><strong>Apple 5.1.1(ix) / 3.2.1(viii):</strong> banking, financial-services and money-management apps "should" come from a legal entity. Position v1 strictly as an expense organiser (no advice, payments or aggregation) and switch to an organization account before charging. <span class="g v">Verified</span> text · interpretation <span class="g i">Inferred</span></li>
@@ -502,7 +557,7 @@ flowchart LR
 
 <!-- RISKS -->
 <section id="risks">
-  <header><p class="eyebrow">11 · Risks</p><h2>Top 10 risks and how to handle them</h2></header>
+  <header><p class="eyebrow">12 · Risks</p><h2>Top 10 risks and how to handle them</h2></header>
   <div class="plate"><table>
     <thead><tr><th>#</th><th>Risk</th><th>Likelihood / impact</th><th>Mitigation</th></tr></thead>
     <tbody>
@@ -516,17 +571,20 @@ flowchart LR
       <tr><td class="mono">R8</td><td>GDPR exposure from cloud AI and sync</td><td><span class="st amber">Med / High</span></td><td>On-device rules by default; per-feature opt-in; minimisation proxy with an audit test; EU host; DPIA before v2</td></tr>
       <tr><td class="mono">R9</td><td>iOS friction: no Mac, native widget code</td><td><span class="st amber">Med / Med</span></td><td>Codemagic for builds; iOS widgets deferred to v1; keep native code thin</td></tr>
       <tr><td class="mono">R10</td><td>Weak differentiation in a freemium-anchored market</td><td><span class="st amber">Med / High</span></td><td>Lead with the French obligation layer; use the 12-tester test as user research; validate willingness to pay before v2</td></tr>
+      <tr><td class="mono">R11</td><td><strong>Decimal-place or rounding corruption</strong>: TND stored as cents, a missed per-unit division, rounding twice. Silent and permanent</td><td><span class="st amber">Med / High</span></td><td>Decimal places only from the Currency table; a lint rule against <code>/100</code>; round once, half-even; property tests across 0/2/3/4 decimals; sabotage tests that must go red</td></tr>
+      <tr><td class="mono">R16</td><td><strong>"14,500" read the wrong way</strong> in OCR, notifications or quick add</td><td><span class="st red">High / High</span></td><td>Currency first, then separators; show the reading back when ambiguous; test corpus with both readings</td></tr>
+      <tr><td class="mono">R12–18</td><td>BCT terms vs server sync · stale regulatory figures · FX-driven false alerts · incomplete Tunisian feeds · silent 1:1 conversion · jurisdiction added too late</td><td><span class="st amber">Med</span></td><td>All covered in <code>07-cross-border.md</code> §9.4</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <!-- DECISIONS -->
 <section id="decisions">
-  <header><p class="eyebrow">12 · Next</p><h2>The five decisions that unblock the build</h2></header>
+  <header><p class="eyebrow">13 · Next</p><h2>The five decisions that unblock the build</h2></header>
   <ol class="dec col">
     <li><div><h3>UI stack</h3><p><strong>Flutter 3.47</strong>, pinned with FVM (move to 3.50 when it is stable), conditional on the Phase 0 spike; Expo is the fallback. <span class="g s">Speculative</span></p></div></li>
     <li><div><h3>MVP platform</h3><p><strong>Android first</strong>: the notification listener only exists there, no Mac is needed, and sideloading avoids store review while you dogfood it. iOS reaches parity in v1. <span class="g i">Inferred</span></p></div></li>
-    <li><div><h3>Sync architecture (hard to reverse, decide before v2)</h3><p>MVP: encrypted backup files only. v2: a <strong>server-arbiter PowerSync + Postgres on an EU host</strong>, with field-level encryption, roughly 80 h cheaper than E2EE. Keep full E2EE as a paid "vault" option. A data model with UUIDv7, soft deletes and owner/household IDs keeps every option open. <span class="g s">Speculative</span></p></div></li>
+    <li><div><h3>Sync architecture (hard to reverse, decide before v2)</h3><p>MVP: encrypted backup files only. v2: a <strong>server-arbiter PowerSync + Postgres on an EU host</strong>, with field-level encryption, roughly 80 h cheaper than E2EE. Keep full E2EE as a paid "vault" option. A data model with UUIDv7, soft deletes and owner/household IDs keeps every option open. BCT rates stay fetched on the device until the BCT agrees to their reuse. <span class="g s">Speculative</span></p></div></li>
     <li><div><h3>Bank sync: when and with whom</h3><p>Personal Enable Banking in v2, or sooner for your own use. For the product, put it behind premium, contracted only once the company exists, after ≥ 3 quotes. Never make it the core value. <span class="g v">Verified</span> constraints</p></div></li>
     <li><div><h3>Licence and legal form</h3><p><strong>FSL-1.1-ALv2 now</strong> for the public repo. Create the company (micro-entreprise or SASU) when the launch phase starts. <span class="g v">Verified</span> FSL · legal form <span class="g u">Unverified</span></p></div></li>
   </ol>
@@ -534,9 +592,9 @@ flowchart LR
 
 <!-- EVIDENCE -->
 <section id="evidence">
-  <header><p class="eyebrow">13 · Evidence</p><h2>How this was researched, and what wasn't checked</h2></header>
+  <header><p class="eyebrow">14 · Evidence</p><h2>How this was researched, and what wasn't checked</h2></header>
   <div class="col stack">
-    <p>Five researchers worked in parallel (market, bank sync, tech stack, product, compliance), browsing on 1 November 2026. An independent fact-checker then tried to <em>refute</em> each one's load-bearing claims against primary sources. Result across <span class="num">55</span> checks: <span class="num">35</span> confirmed, <span class="num">10</span> corrected, <span class="num">1</span> refuted (the claim that no French method app exists; Finzee does), and <span class="num">9</span> could not be verified. A roadmap stage then combined everything, with the corrections taking precedence.</p>
+    <p>Five researchers worked in parallel (market, bank sync, tech stack, product, compliance), browsing on 1 November 2026. An independent fact-checker then tried to <em>refute</em> each one's load-bearing claims against primary sources. Result across <span class="num">55</span> checks: <span class="num">35</span> confirmed, <span class="num">10</span> corrected, <span class="num">1</span> refuted (the claim that no French method app exists; Finzee does), and <span class="num">9</span> could not be verified. A roadmap stage then combined everything, with the corrections taking precedence. A <strong>second pass</strong> for France ⇄ Tunisia (TND mechanics, Tunisian capture, multi-currency design) ran the same way: <span class="num">45</span> checks, of which <span class="num">26</span> were confirmed, <span class="num">13</span> corrected, <span class="num">1</span> refuted (that EUR↔TND moves only through banks and transfer operators; a 2026 circular also lets payment institutions pay out funds from abroad) and <span class="num">5</span> could not be verified. Its synthesis, <code>07-cross-border.md</code>, overrides the earlier files where they conflict.</p>
     <p><strong>Not verified (treat these as open):</strong></p>
     <ul style="margin:0;padding-left:1.2rem;display:grid;gap:.3rem">
       <li>All effort figures: bottom-up estimates. Recalibrate them with logged hours.</li>
@@ -545,6 +603,7 @@ flowchart LR
       <li>That Drift, PowerSync and SQLite3MC work together (each pair is documented): the Phase 0 spike settles it.</li>
       <li>Claude availability in EU regions on Bedrock or Vertex; the text of the PowerSync Open Edition licence.</li>
       <li>FiDA's status after May 2026; METR's 2026 numbers (secondary sources only).</li>
+      <li>Tunisian customs cash-declaration thresholds (press reports conflict; the customs site was unreachable); whether any Tunisian bank exports CSV/OFX; the real total cost of France→Tunisia transfers.</li>
     </ul>
     <p class="muted">Full research with every source URL: <code>docs/research/00-factcheck.md</code> to <code>06-roadmap.md</code> in the <code>expense-manager</code> repository.</p>
   </div>
@@ -559,10 +618,10 @@ flowchart LR
 <script>
 (function(){
   var PH=[
-    {n:"Phase 0",o:80,l:130,p:214},{n:"MVP",o:258,l:427,p:723},{n:"v1 · smart",o:301,l:518,p:880},
+    {n:"Phase 0",o:88,l:144,p:238},{n:"MVP",o:302,l:509,p:873},{n:"v1 · smart",o:340,l:590,p:1008},
     {n:"v2 · together",o:245,l:423,p:749},{n:"Launch",o:104,l:180,p:316}
   ];
-  var MAXH=900, pace="ft", RATE={ft:35,sp:10};
+  var MAXH=1050, pace="ft", RATE={ft:35,sp:10};
   function wk(h){return h/RATE[pace]}
   function fmt(x){return x<10?x.toFixed(1):Math.round(x).toString()}
 
