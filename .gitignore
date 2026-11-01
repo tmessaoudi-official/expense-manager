@@ -1,0 +1,31 @@
+# Machine-local Claude Code settings (never public)
+.claude/settings.local.json
+.claude/*.local.*
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.keystore
+*.jks
+key.properties
+google-services.json
+GoogleService-Info.plist
+
+# Scratch / reports
+/var/
+/.playwright-mcp/
+*.log
+.DS_Store
+
+# Build output (stack chosen later — common defaults)
+build/
+dist/
+node_modules/
+.dart_tool/
+.flutter-plugins*
+.gradle/
+*.iml
+.idea/

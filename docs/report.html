@@ -1,0 +1,622 @@
+<meta charset="utf-8">
+<title>Expense Manager Blueprint</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column (~68ch) with wide "plates" that break out for tables, timeline and charts.
+   Identity: an obligation ledger — paper, ink, one ultramarine accent; amber is reserved for "due soon". */
+:root{
+  --paper:#F4F6F1; --card:#FFFFFF; --ink:#15211D; --muted:#5A6762; --rule:#D8DED6;
+  --accent:#1F55D0; --accent-soft:#E3EAFB; --due:#B86E05; --due-soft:#FBEFD9;
+  --ok:#2C7A4C; --ok-soft:#E1F1E7; --bad:#B13A2D; --bad-soft:#F8E3E0; --neutral-soft:#ECEEEA;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --s1:.25rem; --s2:.5rem; --s3:.75rem; --s4:1rem; --s5:1.5rem; --s6:2.25rem; --s7:3.5rem;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0E1412; --card:#151D1A; --ink:#E4EBE7; --muted:#97A49E; --rule:#27322E;
+  --accent:#8AA8FF; --accent-soft:#1C2742; --due:#E6A64A; --due-soft:#33270F;
+  --ok:#66C28D; --ok-soft:#14291D; --bad:#EC7666; --bad-soft:#341815; --neutral-soft:#1B2320; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#0E1412; --card:#151D1A; --ink:#E4EBE7; --muted:#97A49E; --rule:#27322E;
+  --accent:#8AA8FF; --accent-soft:#1C2742; --due:#E6A64A; --due-soft:#33270F;
+  --ok:#66C28D; --ok-soft:#14291D; --bad:#EC7666; --bad-soft:#341815; --neutral-soft:#1B2320; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:1.0625rem;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 var(--s7)}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1080px;margin-inline:auto}
+.col{max-width:68ch}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.2rem,5.4vw,3.6rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.55rem,3vw,2.1rem);font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.2rem;color:var(--ink)}
+.muted{color:var(--muted)}
+.num,td.n,.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+section{padding-block:var(--s7) 0;display:grid;gap:var(--s5)}
+section>header{display:grid;gap:var(--s2);border-top:1px solid var(--rule);padding-top:var(--s5)}
+.stack{display:grid;gap:var(--s4)}
+
+/* nav */
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);
+  margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:var(--s2) max(16px,env(safe-area-inset-left,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+nav.toc .wrap{display:flex;gap:var(--s4);overflow-x:auto;white-space:nowrap;font-family:var(--f-display);font-size:.9rem;scrollbar-width:thin}
+nav.toc a{color:var(--muted);text-decoration:none;padding-block:var(--s1)}
+nav.toc a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:var(--s6);align-items:center;padding-block:var(--s7) var(--s5)}
+.hero .stack{gap:var(--s4)}
+.pitch{font-family:var(--f-display);font-size:1.35rem;font-weight:500;color:var(--accent)}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+
+/* phone widget mock */
+.phone{justify-self:center;width:min(100%,320px);border-radius:34px;padding:14px;background:var(--ink);box-shadow:0 18px 50px -20px rgba(0,0,0,.45)}
+.screen{border-radius:24px;background:var(--card);padding:var(--s4);display:grid;gap:var(--s3);color:var(--ink)}
+.sts-label{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sts{font-family:var(--f-display);font-weight:800;font-size:2.6rem;letter-spacing:-.03em;line-height:1}
+.sts small{font-size:1.1rem;font-weight:700}
+.sts-sub{font-size:.82rem;color:var(--muted);font-family:var(--f-display)}
+.bar{height:6px;border-radius:3px;background:var(--neutral-soft);overflow:hidden}
+.bar i{display:block;height:100%;width:58%;background:var(--accent)}
+.ob{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s2) var(--s3);align-items:center;font-family:var(--f-display);font-size:.84rem;border-top:1px solid var(--rule);padding-top:var(--s2)}
+.ob .d{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);text-align:center;line-height:1.1}
+.ob .d b{display:block;font-size:1rem;color:var(--ink)}
+.ob .amt{font-family:var(--f-mono);font-size:.82rem}
+.tag{font-family:var(--f-mono);font-size:.66rem;padding:1px 6px;border-radius:999px;white-space:nowrap}
+.tag.due{background:var(--due-soft);color:var(--due)}
+.tag.info{background:var(--accent-soft);color:var(--accent)}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.mock-note{font-family:var(--f-mono);font-size:.68rem;color:var(--muted);text-align:center}
+
+/* verdict tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s3)}
+@media (max-width:820px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:var(--s4);display:grid;gap:var(--s1);align-content:start}
+.tile .k{font-family:var(--f-display);font-size:1.7rem;font-weight:800;letter-spacing:-.02em}
+.tile .l{font-size:.88rem;color:var(--muted);font-family:var(--f-display)}
+
+/* pace toggle */
+.pace{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:3px;background:var(--card);gap:2px}
+.pace button{font:inherit;font-family:var(--f-display);font-size:.88rem;border:0;background:transparent;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
+.pace button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* grade chips */
+.g{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.04em;padding:1px 6px;border-radius:4px;vertical-align:.12em;white-space:nowrap;border:1px solid transparent}
+.g.v{background:var(--ok-soft);color:var(--ok)}
+.g.i{background:var(--accent-soft);color:var(--accent)}
+.g.u{background:var(--due-soft);color:var(--due)}
+.g.s{background:var(--neutral-soft);color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:var(--s3);font-size:.88rem;color:var(--muted)}
+
+/* tables */
+.plate{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.93rem;line-height:1.45}
+th,td{text-align:left;vertical-align:top;padding:.6rem .8rem;border-bottom:1px solid var(--rule)}
+th{font-family:var(--f-display);font-weight:700;font-size:.82rem;color:var(--muted);background:var(--paper);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;white-space:nowrap}
+td strong{font-weight:600}
+
+/* status pills */
+.st{font-family:var(--f-display);font-weight:700;font-size:.75rem;padding:2px 9px;border-radius:999px;white-space:nowrap;display:inline-block}
+.st.green{background:var(--ok-soft);color:var(--ok)}
+.st.amber{background:var(--due-soft);color:var(--due)}
+.st.red{background:var(--bad-soft);color:var(--bad)}
+.st.grey{background:var(--neutral-soft);color:var(--muted)}
+
+/* signature features */
+.feats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s4)}
+@media (max-width:720px){.feats{grid-template-columns:1fr}}
+.feat{display:grid;grid-template-columns:auto 1fr;gap:var(--s3);align-items:start;padding-block:var(--s3);border-top:1px solid var(--rule)}
+.feat .ix{font-family:var(--f-mono);font-size:.8rem;color:var(--accent);padding-top:.25rem}
+.feat h3{margin-bottom:var(--s1)}
+.feat p{font-size:.97rem}
+.feat.moat h3::after{content:"moat";font-family:var(--f-mono);font-size:.62rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-left:.5rem;padding:1px 6px;border-radius:4px;background:var(--accent);color:var(--paper);vertical-align:.2em}
+
+/* release lanes */
+.lanes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s3)}
+@media (max-width:900px){.lanes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.lanes{grid-template-columns:1fr}}
+.lane{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:var(--s4);display:grid;gap:var(--s2);align-content:start;min-width:0}
+.lane h3{font-size:1rem}
+.lane ul{margin:0;padding-left:1.1rem;font-size:.9rem;display:grid;gap:.2rem}
+.lane .when{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+
+/* two-path */
+.paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s4)}
+@media (max-width:720px){.paths{grid-template-columns:1fr}}
+.path{border:1px solid var(--rule);border-radius:10px;padding:var(--s4) var(--s5);background:var(--card);display:grid;gap:var(--s3);align-content:start}
+.path ul{margin:0;padding-left:1.1rem;display:grid;gap:.3rem;font-size:.95rem}
+
+/* charts */
+.chart{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:var(--s4) var(--s5);display:grid;gap:var(--s3)}
+.rows{display:grid;gap:var(--s3)}
+.row{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 5.5rem;gap:var(--s3);align-items:center}
+@media (max-width:560px){.row{grid-template-columns:6.5rem minmax(0,1fr) 4.2rem}}
+.row .lbl{font-family:var(--f-display);font-size:.88rem}
+.row .val{font-family:var(--f-mono);font-size:.8rem;text-align:right;font-variant-numeric:tabular-nums}
+.track{position:relative;height:22px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(11.111% - 1px),var(--rule) calc(11.111% - 1px),var(--rule) 11.111%)}
+.range{position:absolute;top:7px;height:8px;border-radius:4px;background:var(--accent-soft);border:1px solid var(--accent)}
+.likely{position:absolute;top:2px;width:4px;height:18px;margin-left:-2px;border-radius:2px;background:var(--accent)}
+.axis{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 5.5rem;gap:var(--s3)}
+@media (max-width:560px){.axis{grid-template-columns:6.5rem minmax(0,1fr) 4.2rem}}
+.axis .ticks{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+
+/* gantt */
+.gantt{display:grid;gap:var(--s2)}
+.gr{display:grid;grid-template-columns:9.5rem minmax(0,1fr);gap:var(--s3);align-items:center}
+@media (max-width:560px){.gr{grid-template-columns:6.5rem minmax(0,1fr)}}
+.gr .lbl{font-family:var(--f-display);font-size:.88rem}
+.gtrack{position:relative;height:30px;border-radius:6px;background:var(--paper)}
+.gbar{position:absolute;top:4px;height:22px;border-radius:5px;background:var(--accent);color:var(--paper);font-family:var(--f-mono);font-size:.7rem;display:flex;align-items:center;padding-inline:6px;overflow:hidden;white-space:nowrap;transition:left .35s ease,width .35s ease}
+.gbar.wait{background:var(--due-soft);color:var(--due);border:1px dashed var(--due)}
+.gbar.ms{background:var(--ink)}
+.gscale{display:grid;grid-template-columns:9.5rem minmax(0,1fr);gap:var(--s3)}
+@media (max-width:560px){.gscale{grid-template-columns:6.5rem minmax(0,1fr)}}
+.gscale .ticks{position:relative;height:1.2rem;font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.gscale .ticks span{position:absolute;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){.gbar{transition:none}}
+
+/* phase cards */
+.phases{display:grid;gap:var(--s4)}
+.phase{display:grid;grid-template-columns:11rem minmax(0,1fr);gap:var(--s5);padding-block:var(--s4);border-top:1px solid var(--rule)}
+@media (max-width:720px){.phase{grid-template-columns:1fr;gap:var(--s2)}}
+.phase .meta{display:grid;gap:var(--s1);align-content:start}
+.phase .meta .h{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.phase dl{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:var(--s2) var(--s4);margin:0;font-size:.95rem}
+@media (max-width:520px){.phase dl{grid-template-columns:1fr;gap:var(--s1)}}
+.phase dt{font-family:var(--f-display);font-weight:700;font-size:.82rem;color:var(--muted);padding-top:.1rem}
+.phase dd{margin:0}
+
+/* architecture */
+.arch{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:var(--s4);overflow-x:auto}
+.mermaid{margin:0;background:transparent;min-width:640px}
+
+.callout{border-left:3px solid var(--due);background:var(--due-soft);padding:var(--s3) var(--s4);border-radius:0 8px 8px 0;font-size:.97rem}
+.callout.info{border-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:var(--s7);padding-top:var(--s5);border-top:1px solid var(--rule);font-size:.9rem;color:var(--muted);display:grid;gap:var(--s2)}
+ol.dec{margin:0;padding:0;list-style:none;display:grid;gap:var(--s4);counter-reset:d}
+ol.dec li{display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:var(--s3);counter-increment:d}
+ol.dec li::before{content:"D" counter(d);font-family:var(--f-mono);font-weight:500;color:var(--accent);padding-top:.15rem}
+ol.dec h3{font-size:1.05rem;margin-bottom:var(--s1)}
+</style>
+
+<nav class="toc" aria-label="Sections"><div class="wrap">
+  <a href="#verdict">Verdict</a><a href="#market">Market</a><a href="#product">Product</a><a href="#feasibility">Feasibility</a>
+  <a href="#bank">Bank sync</a><a href="#tech">Tech stack</a><a href="#effort">Effort</a><a href="#roadmap">Roadmap</a>
+  <a href="#cost">Costs</a><a href="#compliance">Compliance</a><a href="#risks">Risks</a><a href="#decisions">Decisions</a><a href="#evidence">Evidence</a>
+</div></nav>
+
+<main class="wrap">
+
+<div class="hero">
+  <div class="stack">
+    <p class="eyebrow">Concept blueprint · researched 1 November 2026</p>
+    <h1>The money app that tells you <em>before</em>.</h1>
+    <p class="pitch">Expense manager, reminder and tracker, built France-first and local-first.</p>
+    <p class="lede col">Most apps record the money you've already spent. This one looks ahead: everything you owe goes on one timeline, the app warns you before a renewal or a price rise hits, and it shows a single safe-to-spend number. It works with no bank connection; bank sync is an optional extra.</p>
+    <p class="muted col">This report covers the market, the full feature design, feasibility area by area, bank sync, the tech stack, an effort estimate, a phased roadmap, costs, compliance, risks and the five decisions to make next. It is built from five research areas, each fact-checked against primary sources on the same day.</p>
+  </div>
+  <div class="phone" aria-label="Example home-screen widget">
+    <div class="screen">
+      <div>
+        <div class="sts-label">Reste à dépenser · jusqu'au 5 nov.</div>
+        <div class="sts num">412<small>,30 €</small></div>
+        <div class="sts-sub">≈ 103 € / jour · 3 obligations à venir</div>
+      </div>
+      <div class="bar" aria-hidden="true"><i></i></div>
+      <div class="ob"><div class="d">NOV<b>03</b></div><div>Forfait mobile</div><div class="amt">19,99 €</div></div>
+      <div class="ob"><div class="d">NOV<b>04</b></div><div>Fin d'essai streaming <span class="tag due">résilier ?</span></div><div class="amt">13,49 €</div></div>
+      <div class="ob"><div class="d">NOV<b>12</b></div><div>Assurance habitation <span class="tag info">+6 %</span></div><div class="amt">24,10 €</div></div>
+      <div class="ob"><div class="d">DÉC<b>01</b></div><div>Garantie lave-linge <span class="tag ok">reste 30 j</span></div><div class="amt">—</div></div>
+      <div class="mock-note">Example data · widget mock-up</div>
+    </div>
+  </div>
+</div>
+
+<!-- VERDICT -->
+<section id="verdict">
+  <header><p class="eyebrow">01 · Bottom line</p><h2>Feasible. The risk is commercial, not technical.</h2></header>
+  <div class="tiles">
+    <div class="tile"><span class="k">Feasible</span><span class="l">No red area on the critical path. The one red, automatic capture on iOS, is a missing feature, not a blocker.</span></div>
+    <div class="tile"><span class="k num" data-ft="~4 mo" data-sp="~13 mo">~4 mo</span><span class="l">to a personal daily driver (MVP, likely estimate)</span></div>
+    <div class="tile"><span class="k num" data-ft="~11 mo" data-sp="~3.2 yr">~11 mo</span><span class="l">to a store launch with sync, household and bank sync</span></div>
+    <div class="tile"><span class="k num">€0–15</span><span class="l">per month to run during the personal phase</span></div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center">
+    <div class="pace" role="group" aria-label="Development pace">
+      <button type="button" id="pace-ft" aria-pressed="true">Full-time · 35 h/wk</button>
+      <button type="button" id="pace-sp" aria-pressed="false">Side project · 10 h/wk</button>
+    </div>
+    <span class="muted" style="font-size:.9rem">This switch updates every duration on the page.</span>
+  </div>
+  <div class="col stack">
+    <p><strong>Recommendation:</strong> build it in <strong>Flutter</strong>, already installed in your /stack, <strong>Android first</strong>, as a local-first app with an encrypted on-device database. Ship a personal daily driver with no bank sync: quick capture, file import, bills and reminders, safe-to-spend, and Android notification capture. Add sync, households and bank sync once you've used it every day for 30 days. <span class="g s">Speculative</span> <span class="muted">(a design judgment based on the verified facts below)</span></p>
+    <p><strong>Lean option:</strong> if you only have ~10 h/week, an Android-only cut (no widget, no multi-currency, notification capture plus CSV import, bills, reminders and basic safe-to-spend) is about <span class="num">360 h</span>: <span class="num" data-ft="≈10 weeks" data-sp="≈36 weeks">≈10 weeks</span>. <span class="g s">Speculative</span></p>
+  </div>
+  <div class="legend" aria-label="Evidence grade legend">
+    <span><span class="g v">Verified</span> source opened during this research</span>
+    <span><span class="g i">Inferred</span> consistent with evidence, not directly confirmed</span>
+    <span><span class="g u">Unverified</span> checkable but not checked</span>
+    <span><span class="g s">Speculative</span> design judgment</span>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section id="market">
+  <header><p class="eyebrow">02 · Market</p><h2>A crowded field with one gap: nobody warns you before money moves</h2></header>
+  <p class="col">US premium apps have settled at about $100/yr and are now competing on AI agents. In France, the local leaders moved toward B2B data and wealth tracking, and no well-designed, scaled budgeting app is left. A small French envelope app does exist (Finzee, 7 App Store ratings), so <em>safe-to-spend alone is not a moat</em>. The moat is a <strong>French obligation layer</strong>: contract lifecycles, termination timing, warranty clocks and <em>frais réels</em>, which global apps won't build.</p>
+  <div class="plate"><table>
+    <thead><tr><th>App</th><th>Price</th><th>Bank sync</th><th>Strength</th><th>Weakness / lesson</th><th>Grade</th></tr></thead>
+    <tbody>
+      <tr><td><strong>YNAB</strong></td><td class="mono">$14.99/mo · $109/yr</td><td>US-centric</td><td>Strong method (zero-based)</td><td>Steep learning curve, USD only</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Monarch</strong></td><td class="mono">$14.99/mo · $99.99/yr (likely Core)</td><td>Yes (US)</td><td>Household, polished</td><td>Plus tier price not published</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Copilot</strong></td><td class="mono">$109/yr</td><td>Yes (US)</td><td>Design-led, AI that asks before acting</td><td>No native Android app</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Rocket Money</strong></td><td class="mono">Premium+ $15/mo</td><td>Yes (US)</td><td>Rowan agent (Aug 2026, limited rollout), bill negotiation</td><td>Service-heavy, US only</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Bankin'</strong> (FR)</td><td class="mono">Plus from €3.33/mo</td><td>Yes (owns Bridge)</td><td>French bank coverage</td><td>Drifting to B2B; anchors French prices low</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Linxo</strong> (FR)</td><td class="mono">"Linxo Lab" free</td><td>Yes</td><td>ACPR-licensed</td><td>Now mostly a B2B data hub</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Finary</strong> (FR)</td><td class="mono">Plus €149.99/yr</td><td>Yes</td><td>Wealth tracking</td><td>Budgeting locked behind the top tier</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Emma</strong> (UK)</td><td class="mono">£41.99–124.99/yr</td><td>Yes</td><td>Subscription finder</td><td>Budgeting locked behind a paid tier</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Spendee / Wallet</strong></td><td class="mono">$14.99–35.99/yr</td><td>Yes</td><td>Cheap; Wallet ships an MCP AI integration</td><td>Generic, little planning ahead</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Cashew</strong> (OSS)</td><td class="mono">Free · GPL-3.0</td><td>No</td><td>Flutter + Drift, ~4.8k★: manual-first works</td><td>No forecasting or legal clocks</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Actual / Firefly III</strong></td><td class="mono">Free · MIT / AGPL</td><td>Partial (EU via Enable Banking)</td><td>Local-first niche: ~30k / ~25k★</td><td>Desktop-first, not mobile</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Finzee</strong> (FR)</td><td class="mono">≈£29.99/yr</td><td>No</td><td>Envelope budgets, "reste à vivre"</td><td>Tiny (7 ratings); prior art for safe-to-spend</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Mint</strong> †</td><td class="mono">—</td><td>—</td><td>—</td><td>Shut down March 2024: free, affiliate-funded models let users down. Export and a sustainable model matter.</td><td><span class="g i">Inferred</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout info col">French legal lever: since 1 June 2023 (compliance due 1 Sept 2023), consumer contracts that can be signed online must offer an easy online termination function, often called "résiliation en 3 clics" (loi 2022-1158, décret 2023-417). A reminder can therefore link straight to a legal cancellation path. <span class="g v">Verified</span> on Légifrance by the fact-checker. The law sets no literal click count.</div>
+</section>
+
+<!-- PRODUCT -->
+<section id="product">
+  <header><p class="eyebrow">03 · Product</p><h2>Eight signature features</h2>
+  <p class="col muted">The ones marked <em>moat</em> are the features global competitors are least likely to copy. All of them run on a <strong>recurrence engine</strong> that turns past transactions and contracts into future obligations.</p></header>
+  <div class="feats">
+    <div class="feat"><span class="ix">F1</span><div><h3>Safe-to-spend everywhere</h3><p>One number, calculated from your upcoming obligations and goals rather than your bank balance. It appears on the widget, a persistent Android notification, the iOS lock screen and a watch. It turns budgeting into a glance.</p></div></div>
+    <div class="feat moat"><span class="ix">F2</span><div><h3>Obligation radar</h3><p>Bills, subscriptions, trials, annual renewals, price rises, warranty and return windows on <strong>one timeline</strong>. Each item has an action: pay, cancel (with a link to the legal termination page), claim, or keep. Tagline: "nothing renews behind your back".</p></div></div>
+    <div class="feat"><span class="ix">F3</span><div><h3>2-second capture, offline</h3><p>One tap, natural-language entry ("14,50 resto split avec Sam"), on-device receipt OCR, and Android bank-notification capture. With no bank feed, capture speed decides whether the data is complete.</p></div></div>
+    <div class="feat moat"><span class="ix">F4</span><div><h3>Proof vault with legal clocks</h3><p>Every receipt carries the dates the law attaches to it: the 2-year legal conformity guarantee, return windows, and 3-year tax-proof retention. "Show me what I can still claim" becomes a simple query.</p></div></div>
+    <div class="feat moat"><span class="ix">F5</span><div><h3>Frais-réels autopilot</h3><p>A live, year-round comparison of frais réels against the 10% flat deduction, a kilometre log using the official scale tables (dated yearly parameters), and exports for the tax return and for employers' notes de frais.</p></div></div>
+    <div class="feat"><span class="ix">F6</span><div><h3>Household money, no awkward talks</h3><p>Fair-share rules (by income), private spaces, automatic balances and settle-up. It combines a budget app and a Tricount-style group in one ledger.</p></div></div>
+    <div class="feat"><span class="ix">F7</span><div><h3>What-if sandbox</h3><p>Drag a planned purchase onto the forecast and see the low point, the change to safe-to-spend and the delay to each goal before you buy.</p></div></div>
+    <div class="feat"><span class="ix">F8</span><div><h3>Only explainable insights</h3><p>Every alert or score opens onto the exact transactions and the parameter (with its source) behind it. In personal finance, trust is the product. AI only ever proposes; you confirm.</p></div></div>
+  </div>
+  <p class="muted" style="font-size:.9rem">All eight are <span class="g s">Speculative</span> product design. Their legal basis (warranty, retention, termination) is <span class="g v">Verified</span> on service-public.fr and Légifrance.</p>
+
+  <h3>The full feature map: 49 features, MoSCoW-ranked, assigned to releases</h3>
+  <div class="lanes">
+    <div class="lane"><h3>MVP</h3><span class="when" data-ft="≈ weeks 4–16" data-sp="≈ weeks 13–56">≈ weeks 4–16</span><ul>
+      <li>Accounts, transfers, opening balances</li><li>1-tap quick add, offline</li><li>Categories, tags, splits</li><li>CSV/OFX import + duplicate guard</li><li>Rules engine ("make a rule from this correction")</li><li>Category-limit budgets</li><li>Bills and subscriptions + local reminders</li><li>Free-trial-ending alerts</li><li>Basic safe-to-spend + Android widget</li><li>Receipt photos (no OCR yet)</li><li>Multi-currency, manual rates</li><li>App lock, encryption, full export</li><li>FR + EN</li><li>Android notification capture</li></ul></div>
+    <div class="lane"><h3>v1 · smart</h3><span class="when" data-ft="≈ weeks 16–31" data-sp="≈ weeks 56–108">≈ weeks 16–31</span><ul>
+      <li>Recurring detection → proposed bills</li><li>Price-rise detection</li><li>30/60/90-day forecast + low point</li><li>Envelope / zero-based mode</li><li>Goals and sinking funds</li><li>On-device receipt OCR</li><li>Warranty vault with legal clocks</li><li>Frais réels + kilometre log</li><li>Natural-language entry via LLM proxy (opt-in)</li><li>Cancellation helper cards</li><li>Insights + anomaly rules</li><li>iOS parity, lock-screen widgets</li><li>Accessibility AA, Arabic + RTL</li></ul></div>
+    <div class="lane"><h3>v2 · together</h3><span class="when" data-ft="≈ weeks 31–43" data-sp="≈ weeks 108–150">≈ weeks 31–43</span><ul>
+      <li>Multi-device sync (EU host)</li><li>Households: shared budgets, private spaces, settle-up</li><li>Web companion</li><li>Bank sync (Enable Banking, your own accounts)</li><li>Reconciliation: captured vs booked</li><li>What-if sandbox</li><li>Voice capture, receipt line items</li><li>Notes de frais, e-receipt inbox</li><li>Watch complications, travel mode</li></ul></div>
+    <div class="lane"><h3>Launch</h3><span class="when" data-ft="≈ weeks 43–48 + waits" data-sp="≈ weeks 150–168 + waits">≈ weeks 43–48 + waits</span><ul>
+      <li>Company + D-U-N-S, organization store accounts</li><li>Paywall (RevenueCat)</li><li>Privacy policy, DPIA, processor agreements</li><li>Store listings, Data safety, financial declarations</li><li>FR-first production release</li><li>Commercial aggregator contract (premium tier)</li></ul>
+      <p class="muted" style="font-size:.85rem"><strong>Won't build:</strong> investment tracking, a bill-negotiation service, credit scoring. Each would dilute focus or carry heavy regulation.</p></div>
+  </div>
+  <p class="muted" style="font-size:.9rem">The product research put sync and households in v1. The roadmap moved them to v2 because they are the single largest engineering cost and they need the sync decision (D3) settled first. The roadmap was written after the fact-check, so it takes precedence.</p>
+</section>
+
+<!-- FEASIBILITY -->
+<section id="feasibility">
+  <header><p class="eyebrow">04 · Feasibility</p><h2>Area by area</h2></header>
+  <div class="plate"><table>
+    <thead><tr><th>Area</th><th>Verdict</th><th>Why</th><th>Grade</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Core: ledger, budgets, reminders, safe-to-spend</strong></td><td><span class="st green">Green</span></td><td>Mature packages (Drift 2.35, flutter_local_notifications 22.3, fl_chart 1.3, Riverpod 3.4). Reminders are scheduled on the device, so no server is needed.</td><td><span class="g v">Verified</span> pub.dev</td></tr>
+      <tr><td><strong>Encryption at rest + app lock</strong></td><td><span class="st green">Green</span></td><td><code>sqlite3</code> 3.x with SQLite3MultipleCiphers is the supported path (sqlcipher_flutter_libs is end-of-life); local_auth for biometrics.</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>File import (CSV / OFX / QIF)</strong></td><td><span class="st green">Green</span></td><td>No regulation, free, works with every bank, and is the fallback when bank consent expires.</td><td><span class="g v">Verified</span> / <span class="g i">Inferred</span></td></tr>
+      <tr><td><strong>Receipt OCR</strong></td><td><span class="st green">Green</span> OCR · <span class="st amber">Amber</span> parsing</td><td>ML Kit v2 runs on the device on both OSes. Parsing French receipts (TTC/HT, decimal comma) is the hard part.</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Android auto-capture</strong> (notification listener)</td><td><span class="st green">Green</span> personal · <span class="st amber">Amber</span> Play</td><td>Technically standard. No Play policy text was found that allows or forbids it. Android 15 hides one-time-password notifications. Never request SMS permissions.</td><td><span class="g u">Unverified</span> Play stance</td></tr>
+      <tr><td><strong>iOS auto-capture</strong></td><td><span class="st red">Red</span></td><td>iOS apps can't read other apps' notifications, and FinanceKit is US/UK only. The only path is the Shortcuts "Transaction" automation, which covers Apple Pay taps only.</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>AI layer</strong></td><td><span class="st green">Green</span> cost · <span class="st amber">Amber</span> privacy</td><td>Claude Haiku 5.5 costs about $0.000065 per categorisation. Anthropic's first-party API has no EU-pinned inference, so cloud calls count as third-country transfers. Use on-device rules first and make the cloud call opt-in.</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Bank sync for personal use</strong></td><td><span class="st green">Green</span></td><td>Enable Banking's restricted mode covers your own linked accounts for non-commercial use; expect a manual app review.</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>Bank sync as a product</strong></td><td><span class="st amber">Amber</span></td><td>The blocker is commercial: you need a company and KYB, the majors only give prices on request, and GoCardless-style closures happen.</td><td><span class="g i">Inferred</span></td></tr>
+      <tr><td><strong>Multi-device sync + households</strong></td><td><span class="st amber">Amber</span></td><td>The largest engineering cost. Drift + PowerSync + SQLite3MC are each documented in pairs, but no source confirms all three together. A Phase 0 spike decides it.</td><td><span class="g i">Inferred</span></td></tr>
+      <tr><td><strong>Web client</strong></td><td><span class="st amber">Amber</span></td><td>Flutter web draws to a canvas: fine for a logged-in dashboard, poor for a marketing site, which should be a static site.</td><td><span class="g u">Unverified</span></td></tr>
+      <tr><td><strong>Store publication</strong></td><td><span class="st amber">Amber</span></td><td>Play: 12 testers for 14 days on new personal accounts. Apple: guidelines 5.1.1(ix) and 3.2.1(viii) can be applied to individual accounts with finance apps. An organization account solves both.</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td><strong>GDPR</strong></td><td><span class="st green">Green</span> local · <span class="st amber">Amber</span> cloud</td><td>Not on the CNIL's mandatory-DPIA list. Local-only keeps the burden small; cloud sync and AI add a short DPIA, processor agreements and EU hosting.</td><td><span class="g v">Verified</span> CNIL list</td></tr>
+      <tr><td><strong>Differentiation</strong></td><td><span class="st amber">Amber</span></td><td>The gap is real, but safe-to-spend has prior art, and distribution is the hard part. Lead with the obligation layer.</td><td><span class="g v">Verified</span> / <span class="g s">Speculative</span></td></tr>
+      <tr><td><strong>Monetisation</strong></td><td><span class="st amber">Amber</span></td><td>French users anchor on €3.33/mo freemium. €30–50/yr sits between that and US premium. Price not yet validated.</td><td><span class="g s">Speculative</span></td></tr>
+      <tr><td><strong>Future regulation</strong> (FiDA, PSD3)</td><td><span class="st grey">Neutral</span></td><td>FiDA's first obligations come no earlier than 2028, realistically later; PSD3 around 2028. Neither affects a 2026–2028 build.</td><td><span class="g i">Inferred</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- BANK -->
+<section id="bank">
+  <header><p class="eyebrow">05 · Bank sync</p><h2>Two paths, one adapter</h2>
+  <p class="col">You asked to keep this decision open. Research says you can, at almost no cost, provided every source of transactions goes through a single <code>TransactionSource</code> adapter from day one.</p></header>
+  <div class="paths">
+    <div class="path"><h3>Path A: smart capture (core)</h3><ul>
+      <li><strong>CSV / OFX / QIF import</strong> with saved per-bank profiles and a duplicate guard. Works for every French bank.</li>
+      <li><strong>Android notification listener</strong> reads your banking app's payment alerts as they arrive, on the device only, opt-in.</li>
+      <li><strong>Receipt OCR</strong> (ML Kit), the share sheet, natural-language entry.</li>
+      <li><strong>iOS:</strong> a Shortcuts "Transaction" automation feeding an App Intent (Apple Pay only).</li>
+      <li>Cost <strong class="num">€0</strong> · no regulation · works offline.</li></ul></div>
+    <div class="path"><h3>Path B: open banking (add-on)</h3><ul>
+      <li><strong>GoCardless Bank Account Data is closed to new sign-ups</strong> (since ~July 2025). Don't build on it. <span class="g v">Verified</span></li>
+      <li><strong>Personal:</strong> Enable Banking restricted mode on your own whitelisted accounts. Free, non-commercial, manual review. <span class="g v">Verified</span></li>
+      <li><strong>Product:</strong> quotes from Enable Banking, Powens, Bridge (owned by competitor Bankin'), Salt Edge Partner. Run under <em>their</em> licence, not your own AISP licence.</li>
+      <li>Entry cost estimated at <strong class="num">€200–600/mo</strong> + per connection <span class="g i">Inferred, low confidence</span>. Only real quotes settle it.</li>
+      <li>Under PSD2, consent lasts up to 180 days, so the app needs a re-consent reminder before it expires.</li></ul></div>
+  </div>
+  <p class="col"><strong>Verdict:</strong> Path A is the product, and Path B is a premium convenience that pays for its own aggregator fees. When a bank feed arrives, it reconciles "pending" captures against "booked" transactions instead of replacing them. <span class="g i">Inferred</span></p>
+</section>
+
+<!-- TECH -->
+<section id="tech">
+  <header><p class="eyebrow">06 · Technology</p><h2>Flutter, local-first, Android first</h2>
+  <p class="col">The frameworks are scored for <em>this</em> app and <em>you</em>: a solo expert who already has Flutter, Node, PHP and the Android SDK in /stack. Versions were checked on 1 Nov 2026.</p></header>
+  <div class="plate"><table>
+    <thead><tr><th>Criterion</th><th>Flutter 3.47</th><th>React Native 0.88 + Expo 58</th><th>Kotlin/Compose MP</th><th>Native ×2</th><th>PWA</th></tr></thead>
+    <tbody>
+      <tr><td>Solo velocity</td><td class="n">5</td><td class="n">4</td><td class="n">3</td><td class="n">1</td><td class="n">4 → 2</td></tr>
+      <tr><td>iOS + Android</td><td class="n">5</td><td class="n">5</td><td class="n">4</td><td class="n">5</td><td class="n">3</td></tr>
+      <tr><td>Web</td><td class="n">3</td><td class="n">4</td><td class="n">2</td><td class="n">0</td><td class="n">5</td></tr>
+      <tr><td>Home-screen widgets</td><td class="n">3</td><td class="n">4</td><td class="n">4</td><td class="n">5</td><td class="n">0–1</td></tr>
+      <tr><td>Background tasks + local notifications</td><td class="n">4</td><td class="n">4</td><td class="n">4</td><td class="n">5</td><td class="n">1–2</td></tr>
+      <tr><td>Android notification listener</td><td class="n">3</td><td class="n">3</td><td class="n">5</td><td class="n">5</td><td class="n">0</td></tr>
+      <tr><td>Offline-first data</td><td class="n">5</td><td class="n">5</td><td class="n">4</td><td class="n">4</td><td class="n">3</td></tr>
+      <tr><td><strong>Weighted fit</strong></td><td class="n"><strong>≈4.3</strong></td><td class="n">≈4.2</td><td class="n">≈3.6</td><td class="n">≈3.4</td><td class="n">≈2.5</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted" style="font-size:.9rem">Scores <span class="g s">Speculative</span>. Versions and capabilities <span class="g v">Verified</span> on pub.dev, npm, and the Expo and Flutter release feeds. React Native + Expo is a close runner-up and the fallback if the Phase 0 spike fails or a first-class web app becomes the goal.</p>
+
+  <h3>Reference architecture</h3>
+  <div class="arch"><pre class="mermaid">
+flowchart LR
+  subgraph Device["Phone (works fully offline)"]
+    UI["Flutter UI · Riverpod"] --> DB[("Drift / SQLite<br/>encrypted SQLite3MC<br/>key in Keystore/Keychain")]
+    CAP["Capture sources<br/>quick add · OCR (ML Kit)<br/>notification listener (Kotlin)<br/>CSV/OFX import"] --> TS["TransactionSource adapter"]
+    TS --> DB
+    DB --> REC["Recurrence engine<br/>obligations · forecast · safe-to-spend"]
+    REC --> NOTIF["Local reminders<br/>flutter_local_notifications"]
+    REC --> WID["Widgets<br/>Glance / WidgetKit via home_widget"]
+    RULES["On-device rules<br/>Tier 0 categorisation"] --> DB
+  end
+  subgraph Cloud["EU host · from v1 / v2"]
+    PROXY["Small Go/Node API<br/>secrets · minimisation"]
+    PS["PowerSync<br/>(self-hosted Open Edition)"] --> PG[("Postgres")]
+  end
+  DB <-. "v2 sync" .-> PS
+  RULES -. "opt-in: merchant string only" .-> PROXY
+  PROXY --> LLM["Claude Haiku 5.5"]
+  PROXY --> BANK["Enable Banking<br/>(v2, own accounts)"]
+  BANK --> TS
+</pre></div>
+  <div class="plate"><table>
+    <thead><tr><th>Layer</th><th>Choice</th><th>Why / note</th><th>Grade</th></tr></thead>
+    <tbody>
+      <tr><td>UI + state</td><td>Flutter 3.47 (pinned with FVM) + Riverpod 3</td><td>One language, toolchain already in /stack, strongest offline data story</td><td><span class="g v">Verified</span> versions</td></tr>
+      <tr><td>Local DB</td><td>Drift on SQLite + SQLite3MultipleCiphers</td><td>Reactive SQL queries, migration tests, encryption at rest</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td>Money type</td><td>Integer minor units + ISO 4217 currency</td><td>Never floats; rounding and FX are tested from day 1</td><td><span class="g s">Speculative</span></td></tr>
+      <tr><td>Reminders</td><td>flutter_local_notifications, rescheduled from the DB on boot, sync and edit</td><td>Phone makers' battery savers are the main risk (R7)</td><td><span class="g v">Verified</span> pkg</td></tr>
+      <tr><td>Sync (v2)</td><td>PowerSync → Postgres on an EU host (self-hosted)</td><td>The server is the arbiter (households need validation); field-level encryption; full E2EE is a +80 h option</td><td><span class="g v">Verified</span> pairs · triple <span class="g i">Inferred</span></td></tr>
+      <tr><td>AI</td><td>On-device rules → opt-in proxy → Claude Haiku 5.5 ($0.10 / $0.50 per MTok)</td><td>≈ $0.05 per active user/month at most; sends no IBAN, name or image</td><td><span class="g v">Verified</span> pricing</td></tr>
+      <tr><td>Payments (launch)</td><td>RevenueCat</td><td>Free up to $2.5k monthly tracked revenue</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td>CI</td><td>GitHub Actions (public repo = free) + Codemagic for iOS (500 free M2 min/mo)</td><td>No Mac needed until WidgetKit work</td><td><span class="g v">Verified</span> Codemagic</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- EFFORT -->
+<section id="effort">
+  <header><p class="eyebrow">07 · Effort</p><h2>≈ 1,680 focused hours, likely</h2>
+  <p class="col">The estimate is built bottom-up from the work items, for a solo expert developer new to Flutter/Dart. Bars show the optimistic-to-pessimistic range; the dark tick marks the likely figure. <span class="g s">Speculative</span>: log your hours and recalibrate after the MVP.</p></header>
+  <div class="chart">
+    <div class="rows" id="effort-rows"></div>
+    <div class="axis"><span></span><div class="ticks"><span>0 h</span><span>300</span><span>600</span><span>900 h</span></div><span></span></div>
+  </div>
+  <div class="plate"><table>
+    <thead><tr><th>Phase</th><th class="n">Hours O / L / P</th><th class="n">Weeks O / L / P</th></tr></thead>
+    <tbody id="effort-table"></tbody>
+  </table></div>
+  <div class="col stack">
+    <p><strong>AI-assisted coding:</strong> plan for about <strong>10–15% fewer hours</strong>, not 2×. METR's 2025 randomised trial found experienced developers were 19% <em>slower</em> with AI while believing they were 20% faster <span class="g v">Verified</span>. Its 2026 follow-up leans toward a speed-up but is inconclusive <span class="g i">Inferred</span>. This project is where AI helps most (greenfield, a new language, lots of boilerplate), but AI doesn't shorten store reviews, tester windows or sync design.</p>
+    <p class="muted"><strong>Calendar waits outside the hour count:</strong> Play closed test (12 testers × 14 days) · D-U-N-S number (free, up to ~28 days) · company creation · Enable Banking app review · aggregator contract and KYB (weeks to months). Start them early and run them in parallel.</p>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <header><p class="eyebrow">08 · Roadmap</p><h2>Five phases, each with an exit test</h2>
+  <p class="col">Durations are the likely estimates at the selected pace. Amber bars are calendar waits that run alongside development.</p></header>
+  <div class="chart">
+    <div class="gantt" id="gantt"></div>
+    <div class="gscale"><span></span><div class="ticks" id="gscale"></div></div>
+  </div>
+  <div class="phases">
+    <div class="phase"><div class="meta"><h3>Phase 0 · Foundations</h3><span class="h" data-ft="130 h · ~4 wk" data-sp="130 h · ~13 wk">130 h · ~4 wk</span></div>
+      <dl><dt>Milestones</dt><dd>Repo + CI green on Android · <strong>stack spike verdict</strong> (Drift + SQLite3MC + PowerSync on Android and iOS via a cloud Mac) · schema v1 with migration tests · app shell in FR/EN</dd>
+      <dt>Exit test</dt><dd>An encrypted DB that PowerSync can sync and Drift can query on both OSes, or a documented fallback (e.g. Expo). The money-type test suite passes. A mutation test proves the migration tests notice a schema change.</dd>
+      <dt>Risks</dt><dd>Interop failure (R3), Flutter learning curve (R2), no Mac (R9)</dd></dl></div>
+    <div class="phase"><div class="meta"><h3>MVP · Daily driver</h3><span class="h" data-ft="427 h · ~12 wk" data-sp="427 h · ~43 wk">427 h · ~12 wk</span></div>
+      <dl><dt>Milestones</dt><dd>Ledger + quick add · import of your own bank's exports · reminders that fire with the app killed · safe-to-spend on the widget · notification capture from your own banking app</dd>
+      <dt>Exit test</dt><dd><strong>30 consecutive days of real use</strong>: every expense captured within 24 h, no missed reminder (checked against a log), backup restores on a clean device, no open data-loss bug.</dd>
+      <dt>Risks</dt><dd>Scope creep (R1), battery savers delaying reminders (R7), bank notification formats changing</dd></dl></div>
+    <div class="phase"><div class="meta"><h3>v1 · Smart</h3><span class="h" data-ft="518 h · ~15 wk" data-sp="518 h · ~52 wk">518 h · ~15 wk</span></div>
+      <dl><dt>Milestones</dt><dd>Forecast + low point · <strong>obligation radar</strong> · OCR → vault · frais-réels comparator from service-public parameters · iOS TestFlight · Play closed test started (it doubles as user research)</dd>
+      <dt>Exit test</dt><dd>12+ testers active for 14 days with ≥ 99% crash-free sessions · ≥ 90% categorisation accuracy on your own data · an audit test proving the LLM proxy sends no IBAN, name or image · accessibility AA checklist passed.</dd>
+      <dt>Risks</dt><dd>French receipt parsing, LLM third-country transfer (R8), Apple beta review (R5), Play listener policy (R4)</dd></dl></div>
+    <div class="phase"><div class="meta"><h3>v2 · Together</h3><span class="h" data-ft="423 h · ~12 wk" data-sp="423 h · ~42 wk">423 h · ~12 wk</span></div>
+      <dl><dt>Milestones</dt><dd>Two devices in sync · a household of 2 with private spaces and settle-up · Enable Banking pulls booked transactions and reconciles them with captured ones · restore drill on the server</dd>
+      <dt>Exit test</dt><dd>Offline edits on two devices converge with no lost rows in a scripted chaos test · household balances proven by property-based tests · re-consent reminder fires ≥ 7 days before expiry · DPIA drafted.</dd>
+      <dt>Risks</dt><dd>Sync architecture (D3), aggregator terms changing (R6), server operations load</dd></dl></div>
+    <div class="phase"><div class="meta"><h3>Launch</h3><span class="h" data-ft="180 h · ~5 wk + waits" data-sp="180 h · ~18 wk + waits">180 h · ~5 wk + waits</span></div>
+      <dl><dt>Milestones</dt><dd>Paywall and entitlements · privacy policy, terms, DPIA, processor agreements · store listings and declarations · FR-first production release · commercial aggregator contract (or bank sync stays personal-only)</dd>
+      <dt>Exit test</dt><dd>Both stores approve · in-app and web account deletion work · MASVS L1 self-assessment · the unit economics show the bank-sync tier covers the aggregator minimum.</dd>
+      <dt>Risks</dt><dd>Apple individual-account review (R5), aggregator minimums (R6), weak conversion (R10)</dd></dl></div>
+  </div>
+</section>
+
+<!-- COST -->
+<section id="cost">
+  <header><p class="eyebrow">09 · Running costs</p><h2>Close to zero until you charge</h2></header>
+  <div class="plate"><table>
+    <thead><tr><th>Item</th><th>Personal phase</th><th>1k-user product</th><th>Grade</th></tr></thead>
+    <tbody>
+      <tr><td>Apple Developer Program</td><td class="mono">99 USD/yr (only for distribution)</td><td class="mono">99 USD/yr (organization)</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td>Google Play registration</td><td class="mono">US$25 once (optional while sideloading)</td><td class="mono">US$25 once</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td>Store commission</td><td>—</td><td>Apple 15% (Small Business Program / EU reduced tier) · Play EEA subscriptions 10% + 5% billing</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td>Hosting</td><td class="mono">€0 → €6.49/mo proxy box</td><td class="mono">≈ €40/mo (2× Hetzner CPX22) or ≈ $74/mo managed (Supabase Pro + PowerSync Pro)</td><td><span class="g v">Verified</span>*</td></tr>
+      <tr><td>Bank aggregator</td><td class="mono">€0 (Enable Banking restricted)</td><td class="mono">€200–600/mo + per connection</td><td><span class="g i">Inferred, low confidence</span></td></tr>
+      <tr><td>LLM (Haiku 5.5 + one monthly Sonnet 5.5 insight)</td><td class="mono">≈ $0.02/mo</td><td class="mono">≈ $50/mo at most</td><td><span class="g v">Verified</span> pricing · usage <span class="g i">Inferred</span></td></tr>
+      <tr><td>RevenueCat</td><td>—</td><td class="mono">free to $2.5k MTR, then 1%</td><td><span class="g v">Verified</span></td></tr>
+      <tr><td>iOS CI (Codemagic)</td><td class="mono">500 free M2 min/mo</td><td class="mono">≈ $10–30/mo</td><td><span class="g v">Verified</span> rate</td></tr>
+      <tr><td>Domain, crash reporting, analytics</td><td class="mono">≈ €10–20/yr; self-hosted €0</td><td class="mono">same + transactional e-mail</td><td><span class="g u">Unverified</span></td></tr>
+      <tr><td><strong>Monthly total</strong></td><td class="mono"><strong>≈ €0–15/mo</strong></td><td class="mono"><strong>≈ €100–200 without bank sync · €350–850 with it</strong></td><td><span class="g i">Inferred</span> sums</td></tr>
+    </tbody>
+  </table></div>
+  <p class="col muted" style="font-size:.92rem">*The Hetzner page showed those servers as "currently unavailable" to order; recheck, or price Scaleway or OVHcloud. <strong>Break-even:</strong> at €4/mo (≈ €3.40 net), 100–250 paying users cover the bank-sync running costs, so bank sync belongs in the premium tier. <span class="g s">Speculative</span></p>
+</section>
+
+<!-- COMPLIANCE -->
+<section id="compliance">
+  <header><p class="eyebrow">10 · Compliance &amp; stores</p><h2>Start as a private tracker, become a company before you charge</h2></header>
+  <div class="paths">
+    <div class="path"><h3>Stores</h3><ul>
+      <li><strong>Apple 5.1.1(ix) / 3.2.1(viii):</strong> banking, financial-services and money-management apps "should" come from a legal entity. Position v1 strictly as an expense organiser (no advice, payments or aggregation) and switch to an organization account before charging. <span class="g v">Verified</span> text · interpretation <span class="g i">Inferred</span></li>
+      <li><strong>Play:</strong> new personal accounts need 12 testers for 14 days, the Financial features declaration and the Data safety form. <span class="g v">Verified</span></li>
+      <li><strong>No SMS permissions, ever:</strong> Play grants them only under a narrow, revocable exception. <span class="g v">Verified</span></li>
+      <li>EU store pages show a trader's address under the DSA; an organization account keeps your home address off them. <span class="g i">Inferred</span></li>
+      <li>Apple EU terms from 1 Oct 2026: IAP 26% / 15% reduced; alternative payment provider 20% / 10%; link-out 15% / 10%; Core Technology Commission 5%. <span class="g v">Verified</span></li></ul></div>
+    <div class="path"><h3>Privacy &amp; data</h3><ul>
+      <li><strong>Local-first is the privacy strategy:</strong> no account and no server in the MVP means minimal GDPR exposure. <span class="g i">Inferred</span></li>
+      <li>Before cloud sync: a short DPIA, an EU host, a register of processors, signed processor agreements, and standard contractual clauses for the LLM. <span class="g i">Inferred</span></li>
+      <li>Anthropic's first-party API offers no EU inference or storage, and data flagged by trust-and-safety can be kept up to 2 years. Send only the merchant string, opt-in. <span class="g v">Verified</span></li>
+      <li>The EU–US Data Privacy Framework appeal (C-703/25 P) is pending. <span class="g i">Inferred</span></li>
+      <li><strong>Licence for the public repo:</strong> FSL-1.1-ALv2 (source-available; each version becomes Apache-2.0 after 2 years; blocks competitors from reusing it commercially). Synthetic test fixtures only, gitleaks in CI. <span class="g v">Verified</span> fsl.software</li></ul></div>
+  </div>
+</section>
+
+<!-- RISKS -->
+<section id="risks">
+  <header><p class="eyebrow">11 · Risks</p><h2>Top 10 risks and how to handle them</h2></header>
+  <div class="plate"><table>
+    <thead><tr><th>#</th><th>Risk</th><th>Likelihood / impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">R1</td><td><strong>Scope creep, never shipping</strong>: 49 features on the map, and "complete" invites more</td><td><span class="st red">High / High</span></td><td>Hard phase gates; the MVP is the 30-day daily-driver test, not a feature count; the lean path as a fallback</td></tr>
+      <tr><td class="mono">R2</td><td><strong>Side-project pace</strong> stretches it to 3+ years and motivation fades</td><td><span class="st red">High / High</span></td><td>Lean path first; ship to yourself early; time-box each phase at 1.3× the likely figure, then cut scope instead of extending</td></tr>
+      <tr><td class="mono">R3</td><td>Drift + SQLite3MC + PowerSync don't work together</td><td><span class="st amber">Med / High</span></td><td>Phase 0 spike as go/no-go; fallbacks: own sync later, PowerSync's own SQLite, or Expo + op-sqlite</td></tr>
+      <tr><td class="mono">R4</td><td>Play rejects notification-listener capture</td><td><span class="st amber">Med / Med</span></td><td>Opt-in, on-device, allow-listed bank apps, prominent disclosure, works when declined; separate flavour or non-Play build</td></tr>
+      <tr><td class="mono">R5</td><td>Apple finance-app rules applied to an individual account</td><td><span class="st amber">Med / High</span></td><td>Expense-organiser positioning; company + D-U-N-S before commercial launch</td></tr>
+      <tr><td class="mono">R6</td><td>Aggregator access or price changes (the GoCardless precedent)</td><td><span class="st amber">Med / High</span></td><td><code>TransactionSource</code> adapter; capture and import stay first-class; quotes from ≥ 3 providers</td></tr>
+      <tr><td class="mono">R7</td><td>Reminders don't fire (battery savers, exact-alarm permission)</td><td><span class="st amber">Med / High</span></td><td>Reschedule on every start, boot and edit; exact alarms where allowed; in-app missed-reminder log; tests on 3–4 phone brands</td></tr>
+      <tr><td class="mono">R8</td><td>GDPR exposure from cloud AI and sync</td><td><span class="st amber">Med / High</span></td><td>On-device rules by default; per-feature opt-in; minimisation proxy with an audit test; EU host; DPIA before v2</td></tr>
+      <tr><td class="mono">R9</td><td>iOS friction: no Mac, native widget code</td><td><span class="st amber">Med / Med</span></td><td>Codemagic for builds; iOS widgets deferred to v1; keep native code thin</td></tr>
+      <tr><td class="mono">R10</td><td>Weak differentiation in a freemium-anchored market</td><td><span class="st amber">Med / High</span></td><td>Lead with the French obligation layer; use the 12-tester test as user research; validate willingness to pay before v2</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- DECISIONS -->
+<section id="decisions">
+  <header><p class="eyebrow">12 · Next</p><h2>The five decisions that unblock the build</h2></header>
+  <ol class="dec col">
+    <li><div><h3>UI stack</h3><p><strong>Flutter 3.47</strong>, pinned with FVM (move to 3.50 when it is stable), conditional on the Phase 0 spike; Expo is the fallback. <span class="g s">Speculative</span></p></div></li>
+    <li><div><h3>MVP platform</h3><p><strong>Android first</strong>: the notification listener only exists there, no Mac is needed, and sideloading avoids store review while you dogfood it. iOS reaches parity in v1. <span class="g i">Inferred</span></p></div></li>
+    <li><div><h3>Sync architecture (hard to reverse, decide before v2)</h3><p>MVP: encrypted backup files only. v2: a <strong>server-arbiter PowerSync + Postgres on an EU host</strong>, with field-level encryption, roughly 80 h cheaper than E2EE. Keep full E2EE as a paid "vault" option. A data model with UUIDv7, soft deletes and owner/household IDs keeps every option open. <span class="g s">Speculative</span></p></div></li>
+    <li><div><h3>Bank sync: when and with whom</h3><p>Personal Enable Banking in v2, or sooner for your own use. For the product, put it behind premium, contracted only once the company exists, after ≥ 3 quotes. Never make it the core value. <span class="g v">Verified</span> constraints</p></div></li>
+    <li><div><h3>Licence and legal form</h3><p><strong>FSL-1.1-ALv2 now</strong> for the public repo. Create the company (micro-entreprise or SASU) when the launch phase starts. <span class="g v">Verified</span> FSL · legal form <span class="g u">Unverified</span></p></div></li>
+  </ol>
+</section>
+
+<!-- EVIDENCE -->
+<section id="evidence">
+  <header><p class="eyebrow">13 · Evidence</p><h2>How this was researched, and what wasn't checked</h2></header>
+  <div class="col stack">
+    <p>Five researchers worked in parallel (market, bank sync, tech stack, product, compliance), browsing on 1 November 2026. An independent fact-checker then tried to <em>refute</em> each one's load-bearing claims against primary sources. Result across <span class="num">55</span> checks: <span class="num">35</span> confirmed, <span class="num">10</span> corrected, <span class="num">1</span> refuted (the claim that no French method app exists; Finzee does), and <span class="num">9</span> could not be verified. A roadmap stage then combined everything, with the corrections taking precedence.</p>
+    <p><strong>Not verified (treat these as open):</strong></p>
+    <ul style="margin:0;padding-left:1.2rem;display:grid;gap:.3rem">
+      <li>All effort figures: bottom-up estimates. Recalibrate them with logged hours.</li>
+      <li>Commercial aggregator pricing: only real quotes settle it.</li>
+      <li>Google Play's position on notification-listener access for finance apps.</li>
+      <li>That Drift, PowerSync and SQLite3MC work together (each pair is documented): the Phase 0 spike settles it.</li>
+      <li>Claude availability in EU regions on Bedrock or Vertex; the text of the PowerSync Open Edition licence.</li>
+      <li>FiDA's status after May 2026; METR's 2026 numbers (secondary sources only).</li>
+    </ul>
+    <p class="muted">Full research with every source URL: <code>docs/research/00-factcheck.md</code> to <code>06-roadmap.md</code> in the <code>expense-manager</code> repository.</p>
+  </div>
+</section>
+
+<footer class="col">
+  <p>Expense Manager Blueprint · research and planning only, no app code yet · 1 November 2026.</p>
+  <p>Prices exclude VAT unless stated. The widget figures and merchants are examples, not real data.</p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var PH=[
+    {n:"Phase 0",o:80,l:130,p:214},{n:"MVP",o:258,l:427,p:723},{n:"v1 · smart",o:301,l:518,p:880},
+    {n:"v2 · together",o:245,l:423,p:749},{n:"Launch",o:104,l:180,p:316}
+  ];
+  var MAXH=900, pace="ft", RATE={ft:35,sp:10};
+  function wk(h){return h/RATE[pace]}
+  function fmt(x){return x<10?x.toFixed(1):Math.round(x).toString()}
+
+  var rows=document.getElementById("effort-rows"), tb=document.getElementById("effort-table");
+  function drawEffort(){
+    rows.innerHTML="";tb.innerHTML="";var to=0,tl=0,tp=0;
+    PH.forEach(function(p){
+      to+=p.o;tl+=p.l;tp+=p.p;
+      var r=document.createElement("div");r.className="row";
+      r.innerHTML='<span class="lbl">'+p.n+'</span><div class="track" role="img" aria-label="'+p.n+': '+p.o+' to '+p.p+' hours, likely '+p.l+'"><span class="range" style="left:'+(p.o/MAXH*100)+'%;width:'+((p.p-p.o)/MAXH*100)+'%"></span><span class="likely" style="left:'+(p.l/MAXH*100)+'%"></span></div><span class="val">'+p.l+' h</span>';
+      rows.appendChild(r);
+      var t=document.createElement("tr");
+      t.innerHTML='<td>'+p.n+'</td><td class="n">'+p.o+' / <strong>'+p.l+'</strong> / '+p.p+'</td><td class="n">'+fmt(wk(p.o))+' / <strong>'+fmt(wk(p.l))+'</strong> / '+fmt(wk(p.p))+'</td>';
+      tb.appendChild(t);
+    });
+    var t=document.createElement("tr");
+    t.innerHTML='<td><strong>Total</strong></td><td class="n"><strong>'+to.toLocaleString("en")+' / '+tl.toLocaleString("en")+' / '+tp.toLocaleString("en")+'</strong></td><td class="n"><strong>'+Math.round(wk(to))+' / '+Math.round(wk(tl))+' / '+Math.round(wk(tp))+'</strong></td>';
+    tb.appendChild(t);
+  }
+
+  var g=document.getElementById("gantt"), sc=document.getElementById("gscale");
+  function drawGantt(){
+    g.innerHTML="";sc.innerHTML="";
+    var start=0, bars=[];
+    PH.forEach(function(p){var w=wk(p.l);bars.push({n:p.n,s:start,w:w,c:""});start+=w;});
+    var total=start;
+    var mvpEnd=bars[1].s+bars[1].w, v1s=bars[2].s;
+    bars.push({n:"12 testers × 14 d",s:v1s+bars[2].w*0.55,w:Math.max(2,2.0*(pace==="ft"?1:1)),c:"wait",lab:"Play test"});
+    bars.push({n:"Company + D-U-N-S",s:bars[3].s+bars[3].w*0.5,w:4,c:"wait",lab:"≤28 d"});
+    bars.push({n:"Aggregator quotes",s:bars[3].s+bars[3].w*0.6,w:Math.max(6,bars[3].w*0.4+bars[4].w*0.5),c:"wait",lab:"KYB"});
+    var span=Math.max(total, bars.reduce(function(m,b){return Math.max(m,b.s+b.w)},0));
+    bars.forEach(function(b){
+      var r=document.createElement("div");r.className="gr";
+      var label=b.c==="wait"?b.lab:(Math.round(b.w)+" wk");
+      r.innerHTML='<span class="lbl">'+b.n+'</span><div class="gtrack"><span class="gbar '+b.c+'" style="left:'+(b.s/span*100)+'%;width:'+(b.w/span*100)+'%" title="weeks '+Math.round(b.s)+'–'+Math.round(b.s+b.w)+'">'+label+'</span></div>';
+      g.appendChild(r);
+    });
+    var step=span>100?24:(span>50?8:4);
+    for(var w=0;w<=span;w+=step){var s=document.createElement("span");s.style.left=(w/span*100)+"%";s.textContent=(w===0?"wk 0":w);sc.appendChild(s);}
+    var last=document.createElement("span");last.style.left="100%";last.style.transform="translateX(-100%)";last.textContent=Math.round(span)+" wk";
+    if(span%step>step*0.4)sc.appendChild(last);
+  }
+
+  function setPace(p){
+    pace=p;
+    document.getElementById("pace-ft").setAttribute("aria-pressed",p==="ft");
+    document.getElementById("pace-sp").setAttribute("aria-pressed",p==="sp");
+    document.querySelectorAll("[data-ft]").forEach(function(el){el.textContent=el.getAttribute("data-"+p)});
+    drawEffort();drawGantt();
+    try{localStorage.setItem("em-pace",p)}catch(e){}
+  }
+  document.getElementById("pace-ft").addEventListener("click",function(){setPace("ft")});
+  document.getElementById("pace-sp").addEventListener("click",function(){setPace("sp")});
+  var saved="ft";try{saved=localStorage.getItem("em-pace")||"ft"}catch(e){}
+  setPace(saved==="sp"?"sp":"ft");
+})();
+</script>
