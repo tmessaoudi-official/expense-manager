@@ -94,7 +94,7 @@ Each research file's load-bearing claims were re-opened against primary sources 
 | confirmed | (Other doc claims) Apple Small Business Program 15%/10%; Android developer verification from 30 Sep 2026 in ID/SG/TH, global 2027, $25 full / free limited (20 devices); D-U-N-S free, up to 28 days | Confirmed. The SBP sentence about 10% ('For developers on the alternative terms in the EU in the App Store Small Business Program and for subscriptions after their first year') can be read two ways. The verification page lists only Indonesia, Singapore and Thailand, so 'Brazil' in the doc rests on the press alone. The limited account also needs no government ID. https://developer.apple.com/app-store/small-business-program/ ; https://support.google.com/android-developer-console/answer/16561738 |
 
 
-# Cross-border pass (France ⇄ Tunisia, 2026-11-01)
+## Cross-border pass (France ⇄ Tunisia, 2026-11-01)
 
 Same convention: the verdict wins over 07a/07b/07c; `07-cross-border.md` already applies these.
 
